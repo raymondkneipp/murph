@@ -16,11 +16,9 @@ import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoTableRouteImport } from './routes/demo/table'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
-import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
 import { ServerRoute as ApiDemoTqTodosServerRouteImport } from './routes/api/demo-tq-todos'
-import { ServerRoute as ApiDemoNamesServerRouteImport } from './routes/api/demo-names'
 import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api/trpc.$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -50,11 +48,6 @@ const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   path: '/demo/start/server-funcs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoStartApiRequestRoute = DemoStartApiRequestRouteImport.update({
-  id: '/demo/start/api-request',
-  path: '/demo/start/api-request',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
   id: '/demo/form/simple',
   path: '/demo/form/simple',
@@ -70,11 +63,6 @@ const ApiDemoTqTodosServerRoute = ApiDemoTqTodosServerRouteImport.update({
   path: '/api/demo-tq-todos',
   getParentRoute: () => rootServerRouteImport,
 } as any)
-const ApiDemoNamesServerRoute = ApiDemoNamesServerRouteImport.update({
-  id: '/api/demo-names',
-  path: '/api/demo-names',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
 const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -88,7 +76,6 @@ export interface FileRoutesByFullPath {
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRoutesByTo {
@@ -98,7 +85,6 @@ export interface FileRoutesByTo {
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRoutesById {
@@ -109,7 +95,6 @@ export interface FileRoutesById {
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRouteTypes {
@@ -121,7 +106,6 @@ export interface FileRouteTypes {
     | '/demo/trpc-todo'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -131,7 +115,6 @@ export interface FileRouteTypes {
     | '/demo/trpc-todo'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   id:
     | '__root__'
@@ -141,7 +124,6 @@ export interface FileRouteTypes {
     | '/demo/trpc-todo'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   fileRoutesById: FileRoutesById
 }
@@ -152,35 +134,30 @@ export interface RootRouteChildren {
   DemoTrpcTodoRoute: typeof DemoTrpcTodoRoute
   DemoFormAddressRoute: typeof DemoFormAddressRoute
   DemoFormSimpleRoute: typeof DemoFormSimpleRoute
-  DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
 }
 export interface FileServerRoutesByFullPath {
-  '/api/demo-names': typeof ApiDemoNamesServerRoute
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesByTo {
-  '/api/demo-names': typeof ApiDemoNamesServerRoute
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
-  '/api/demo-names': typeof ApiDemoNamesServerRoute
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/demo-names' | '/api/demo-tq-todos' | '/api/trpc/$'
+  fullPaths: '/api/demo-tq-todos' | '/api/trpc/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/demo-names' | '/api/demo-tq-todos' | '/api/trpc/$'
-  id: '__root__' | '/api/demo-names' | '/api/demo-tq-todos' | '/api/trpc/$'
+  to: '/api/demo-tq-todos' | '/api/trpc/$'
+  id: '__root__' | '/api/demo-tq-todos' | '/api/trpc/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
-  ApiDemoNamesServerRoute: typeof ApiDemoNamesServerRoute
   ApiDemoTqTodosServerRoute: typeof ApiDemoTqTodosServerRoute
   ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
 }
@@ -222,13 +199,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoStartServerFuncsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/start/api-request': {
-      id: '/demo/start/api-request'
-      path: '/demo/start/api-request'
-      fullPath: '/demo/start/api-request'
-      preLoaderRoute: typeof DemoStartApiRequestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/demo/form/simple': {
       id: '/demo/form/simple'
       path: '/demo/form/simple'
@@ -254,13 +224,6 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiDemoTqTodosServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
-    '/api/demo-names': {
-      id: '/api/demo-names'
-      path: '/api/demo-names'
-      fullPath: '/api/demo-names'
-      preLoaderRoute: typeof ApiDemoNamesServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -278,14 +241,12 @@ const rootRouteChildren: RootRouteChildren = {
   DemoTrpcTodoRoute: DemoTrpcTodoRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
-  DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
-  ApiDemoNamesServerRoute: ApiDemoNamesServerRoute,
   ApiDemoTqTodosServerRoute: ApiDemoTqTodosServerRoute,
   ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
 }
