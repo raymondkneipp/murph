@@ -1,3 +1,7 @@
+[x] organize project
+[ ] fix lint errors
+[ ] format project
+
 - marketing site
 - auth via better auth
 - anon auth then connect email later

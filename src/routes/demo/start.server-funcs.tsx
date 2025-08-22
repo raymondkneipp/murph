@@ -61,7 +61,7 @@ function Home() {
 			<div className="w-full max-w-2xl p-8 rounded-xl backdrop-blur-md bg-black/50 shadow-xl border-8 border-black/10">
 				<h1 className="text-2xl mb-4">Start Server Functions - Todo Example</h1>
 				<ul className="mb-4 space-y-2">
-					{todos?.map((t) => (
+					{todos?.map((t: any) => (
 						<li
 							key={t.id}
 							className="bg-white/10 border border-white/20 rounded-lg p-3 backdrop-blur-sm shadow-md"
@@ -87,6 +87,7 @@ function Home() {
 						disabled={todo.trim().length === 0}
 						onClick={submitTodo}
 						className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors"
+						type="button"
 					>
 						Add todo
 					</button>

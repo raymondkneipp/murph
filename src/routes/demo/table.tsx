@@ -75,7 +75,7 @@ function TableDemo() {
 	);
 	const [globalFilter, setGlobalFilter] = React.useState("");
 
-	const columns = React.useMemo<ColumnDef<Person, any>[]>(
+	const columns = React.useMemo<ColumnDef<Person, unknown>[]>(
 		() => [
 			{
 				accessorKey: "id",
@@ -138,7 +138,7 @@ function TableDemo() {
 				table.setSorting([{ id: "fullName", desc: false }]);
 			}
 		}
-	}, [table.getState().columnFilters[0]?.id]);
+	}, [table]);
 
 	return (
 		<div className="min-h-screen bg-gray-900 p-6">
@@ -224,6 +224,7 @@ function TableDemo() {
 					className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
 					onClick={() => table.setPageIndex(0)}
 					disabled={!table.getCanPreviousPage()}
+					type="button"
 				>
 					{"<<"}
 				</button>
@@ -231,6 +232,7 @@ function TableDemo() {
 					className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
 					onClick={() => table.previousPage()}
 					disabled={!table.getCanPreviousPage()}
+					type="button"
 				>
 					{"<"}
 				</button>
@@ -238,6 +240,7 @@ function TableDemo() {
 					className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
 					onClick={() => table.nextPage()}
 					disabled={!table.getCanNextPage()}
+					type="button"
 				>
 					{">"}
 				</button>
@@ -245,6 +248,7 @@ function TableDemo() {
 					className="px-3 py-1 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
 					onClick={() => table.setPageIndex(table.getPageCount() - 1)}
 					disabled={!table.getCanNextPage()}
+					type="button"
 				>
 					{">>"}
 				</button>
@@ -288,12 +292,14 @@ function TableDemo() {
 				<button
 					onClick={() => rerender()}
 					className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+					type="button"
 				>
 					Force Rerender
 				</button>
 				<button
 					onClick={() => refreshData()}
 					className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+					type="button"
 				>
 					Refresh Data
 				</button>
@@ -312,7 +318,7 @@ function TableDemo() {
 	);
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({ column }: { column: Column<unknown, unknown> }) {
 	const columnFilterValue = column.getFilterValue();
 
 	return (
@@ -320,7 +326,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 			type="text"
 			value={(columnFilterValue ?? "") as string}
 			onChange={(value) => column.setFilterValue(value)}
-			placeholder={`Search...`}
+			placeholder="Search..."
 			className="w-full px-2 py-1 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
 		/>
 	);
