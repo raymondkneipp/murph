@@ -12,6 +12,7 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DemoRouteRouteImport } from './routes/demo/route'
+import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
@@ -29,10 +30,14 @@ const DemoRouteRoute = DemoRouteRouteImport.update({
   path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MarketingIndexRoute = MarketingIndexRouteImport.update({
-  id: '/_marketing/',
-  path: '/',
+const MarketingRouteRoute = MarketingRouteRouteImport.update({
+  id: '/_marketing',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingIndexRoute = MarketingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MarketingRouteRoute,
 } as any)
 const DemoTrpcTodoRoute = DemoTrpcTodoRouteImport.update({
   id: '/trpc-todo',
@@ -97,6 +102,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_marketing': typeof MarketingRouteRouteWithChildren
   '/demo': typeof DemoRouteRouteWithChildren
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -129,6 +135,7 @@ export interface FileRouteTypes {
     | '/demo/start/server-funcs'
   id:
     | '__root__'
+    | '/_marketing'
     | '/demo'
     | '/demo/table'
     | '/demo/tanstack-query'
@@ -140,8 +147,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  MarketingRouteRoute: typeof MarketingRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
-  MarketingIndexRoute: typeof MarketingIndexRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
@@ -178,12 +185,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_marketing': {
+      id: '/_marketing'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MarketingRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_marketing/': {
       id: '/_marketing/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof MarketingIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof MarketingRouteRoute
     }
     '/demo/trpc-todo': {
       id: '/demo/trpc-todo'
@@ -248,6 +262,18 @@ declare module '@tanstack/react-start/server' {
   }
 }
 
+interface MarketingRouteRouteChildren {
+  MarketingIndexRoute: typeof MarketingIndexRoute
+}
+
+const MarketingRouteRouteChildren: MarketingRouteRouteChildren = {
+  MarketingIndexRoute: MarketingIndexRoute,
+}
+
+const MarketingRouteRouteWithChildren = MarketingRouteRoute._addFileChildren(
+  MarketingRouteRouteChildren,
+)
+
 interface DemoRouteRouteChildren {
   DemoTableRoute: typeof DemoTableRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
@@ -271,8 +297,8 @@ const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  MarketingRouteRoute: MarketingRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
-  MarketingIndexRoute: MarketingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
