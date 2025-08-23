@@ -58,7 +58,7 @@ function App() {
 							{ title: "200", description: "Push-ups" },
 							{ title: "300", description: "Squats" },
 						].map((item) => (
-							<Card className="py-4">
+							<Card className="py-4" key={item.title}>
 								<CardHeader className="text-center">
 									<CardTitle className="text-2xl md:text-3xl">
 										{item.title}
@@ -106,7 +106,7 @@ function App() {
 								"Join a community of dedicated athletes. Share your achievements, get motivated, and honor the memory of Lt. Michael Murphy together.",
 						},
 					].map((item) => (
-						<Card>
+						<Card key={item.title}>
 							<CardHeader className="text-center flex flex-col items-center">
 								<div className="bg-primary text-primary-foreground p-4 rounded-full mb-2">
 									<item.icon />
@@ -192,7 +192,7 @@ function App() {
 							title: "Fitness Enthusiast",
 						},
 					].map((testimonial) => (
-						<Card>
+						<Card key={testimonial.name}>
 							<CardContent className="flex flex-col gap-4">
 								<div className="flex gap-0.5">
 									{Array.from({ length: 5 }).map((_, i) => (
