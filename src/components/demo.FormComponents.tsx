@@ -33,7 +33,7 @@ function ErrorMessages({
 			{errors.map((error) => (
 				<div
 					key={typeof error === "string" ? error : error.message}
-					className="text-red-500 mt-1 font-bold"
+					className="text-destructive mt-1 text-sm"
 				>
 					{typeof error === "string" ? error : error.message}
 				</div>
@@ -45,7 +45,8 @@ function ErrorMessages({
 export function TextField({
 	label,
 	placeholder,
-}: {
+	...props
+}: React.ComponentProps<"input"> & {
 	label: string;
 	placeholder?: string;
 }) {
@@ -54,7 +55,7 @@ export function TextField({
 
 	return (
 		<div>
-			<Label htmlFor={label} className="mb-2 text-xl font-bold">
+			<Label htmlFor={label} className="mb-1.5 font-bold">
 				{label}
 			</Label>
 			<Input
@@ -62,6 +63,7 @@ export function TextField({
 				placeholder={placeholder}
 				onBlur={field.handleBlur}
 				onChange={(e) => field.handleChange(e.target.value)}
+				{...props}
 			/>
 			{field.state.meta.isTouched && <ErrorMessages errors={errors} />}
 		</div>
@@ -80,7 +82,7 @@ export function TextArea({
 
 	return (
 		<div>
-			<Label htmlFor={label} className="mb-2 text-xl font-bold">
+			<Label htmlFor={label} className="mb-1.5 font-bold">
 				{label}
 			</Label>
 			<ShadcnTextarea
@@ -139,7 +141,7 @@ export function Slider({ label }: { label: string }) {
 
 	return (
 		<div>
-			<Label htmlFor={label} className="mb-2 text-xl font-bold">
+			<Label htmlFor={label} className="mb-1.5 font-bold">
 				{label}
 			</Label>
 			<ShadcnSlider

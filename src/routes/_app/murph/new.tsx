@@ -74,7 +74,6 @@ function RouteComponent() {
 		finishSecondRun,
 		addReps,
 		reset,
-		save,
 		isSaveSuccess,
 		isSaving,
 		MAX_REPS,

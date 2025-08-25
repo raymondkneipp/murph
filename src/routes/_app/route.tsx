@@ -1,4 +1,10 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	Outlet,
+	redirect,
+	useRouter,
+} from "@tanstack/react-router";
 import { ChevronDownIcon } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,12 +17,36 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getUserName } from "./me";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
+	beforeLoad: async ({ location }) => {
+		console.log("beforeLoad");
+		const session = await authClient.getSession();
+		console.log({ session });
+
+		if (!session.data) {
+			throw redirect({
+				to: "/login",
+				search: {
+					// Use the current location to power a redirect after login
+					// (Do not use `router.state.resolvedLocation` as it can
+					// potentially lag behind the actual current location)
+					redirect: location.href,
+				},
+			});
+		}
+	},
+
+	loader: async () => await getUserName(),
 });
 
 function RouteComponent() {
+	const username = Route.useLoaderData();
+	const router = useRouter();
+
 	return (
 		<>
 			<header className="flex items-center gap-2 justify-between container md:pt-16 pt-4 pb-4 flex-col md:flex-row">
@@ -36,10 +66,12 @@ function RouteComponent() {
 						<DropdownMenuTrigger asChild>
 							<Button variant="ghost">
 								<Avatar>
-									<AvatarImage src="https://github.com/shadcn.png" />
-									<AvatarFallback>UN</AvatarFallback>
+									{/*
+                <AvatarImage src="https://github.com/shadcn.png" />
+                  */}
+									<AvatarFallback>{username?.charAt(0)}</AvatarFallback>
 								</Avatar>
-								<span className="hidden sm:inline">us3rn@m3</span>
+								<span className="hidden sm:inline">{username}</span>
 								<ChevronDownIcon />
 							</Button>
 						</DropdownMenuTrigger>
@@ -53,7 +85,13 @@ function RouteComponent() {
 								<Link to="/settings">Settings</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem className="text-destructive">
+							<DropdownMenuItem
+								className="text-destructive"
+								onClick={() => {
+									authClient.signOut();
+									router.navigate({ to: "/login" });
+								}}
+							>
 								Logout
 							</DropdownMenuItem>
 						</DropdownMenuContent>

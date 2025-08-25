@@ -15,6 +15,7 @@ import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as UsernameRouteImport } from './routes/$username'
 import { Route as DemoRouteRouteImport } from './routes/demo/route'
 import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
@@ -32,6 +33,7 @@ import { Route as AppMurphNewRouteImport } from './routes/_app/murph/new'
 import { Route as AppMurphMurphIdRouteImport } from './routes/_app/murph/$murphId'
 import { ServerRoute as ApiDemoTqTodosServerRouteImport } from './routes/api/demo-tq-todos'
 import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api/trpc.$'
+import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
 
@@ -52,6 +54,10 @@ const DemoRouteRoute = DemoRouteRouteImport.update({
 } as any)
 const MarketingRouteRoute = MarketingRouteRouteImport.update({
   id: '/_marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -79,14 +85,14 @@ const DemoTableRoute = DemoTableRouteImport.update({
   getParentRoute: () => DemoRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/_auth/signup',
+  id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/_auth/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
@@ -138,6 +144,11 @@ const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootServerRouteImport,
 } as any)
+const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/demo': typeof DemoRouteRouteWithChildren
@@ -180,6 +191,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/_marketing': typeof MarketingRouteRouteWithChildren
   '/demo': typeof DemoRouteRouteWithChildren
   '/$username': typeof UsernameRoute
@@ -241,6 +253,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
+    | '/_auth'
     | '/_marketing'
     | '/demo'
     | '/$username'
@@ -263,36 +276,39 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   MarketingRouteRoute: typeof MarketingRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
   UsernameRoute: typeof UsernameRoute
   LeaderboardRoute: typeof LeaderboardRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesByTo {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/demo-tq-todos' | '/api/trpc/$'
+  fullPaths: '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/demo-tq-todos' | '/api/trpc/$'
-  id: '__root__' | '/api/demo-tq-todos' | '/api/trpc/$'
+  to: '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
+  id: '__root__' | '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   ApiDemoTqTodosServerRoute: typeof ApiDemoTqTodosServerRoute
+  ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
   ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
 }
 
@@ -324,6 +340,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof MarketingRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -366,14 +389,14 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_app/settings': {
       id: '/_app/settings'
@@ -449,6 +472,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiTrpcSplatServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
@@ -470,6 +500,20 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
 )
 
 interface MarketingRouteRouteChildren {
@@ -508,18 +552,18 @@ const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   MarketingRouteRoute: MarketingRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
   UsernameRoute: UsernameRoute,
   LeaderboardRoute: LeaderboardRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiDemoTqTodosServerRoute: ApiDemoTqTodosServerRoute,
+  ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
   ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport

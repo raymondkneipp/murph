@@ -34,14 +34,55 @@ import {
 import { MurphBadge } from "@/components/murph-badge";
 import { Icon as CustomIcons } from "@/components/icon";
 import { formatNumber, formatTimeDifference } from "@/lib/utils";
+import { getWebRequest } from "@tanstack/react-start/server";
+import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
 
 const getUserMurphs = createServerFn({ method: "GET" }).handler(async () => {
-	return db.select().from(murphsTable);
+	const request = getWebRequest();
+	if (!request?.headers) {
+		return null;
+	}
+	const session = await auth.api.getSession({
+		headers: request.headers,
+	});
+
+	if (!session?.user) {
+		throw new Error("Unauthorized");
+	}
+
+	return db
+		.select()
+		.from(murphsTable)
+		.where(eq(murphsTable.userId, session.user.id));
 });
+
+export const getUserName = createServerFn({ method: "GET" }).handler(
+	async () => {
+		const request = getWebRequest();
+		if (!request?.headers) {
+			return null;
+		}
+		const session = await auth.api.getSession({
+			headers: request.headers,
+		});
+
+		if (!session?.user) {
+			throw new Error("Unauthorized");
+		}
+
+		return session.user.name;
+	},
+);
 
 export const Route = createFileRoute("/_app/me")({
 	component: RouteComponent,
-	loader: async () => await getUserMurphs(),
+	loader: async () => {
+		return {
+			murphs: await getUserMurphs(),
+			username: await getUserName(),
+		};
+	},
 });
 
 function murphMetrics(murphs: Murph[]) {
@@ -58,7 +99,7 @@ function murphMetrics(murphs: Murph[]) {
 }
 
 function RouteComponent() {
-	let murphs = Route.useLoaderData();
+	let { murphs, username } = Route.useLoaderData();
 
 	const {
 		totalDistance,
@@ -66,7 +107,7 @@ function RouteComponent() {
 		totalPushups,
 		totalSquats,
 		totalMurphs,
-	} = useMemo(() => murphMetrics(murphs), [murphs]);
+	} = useMemo(() => murphMetrics(murphs ?? []), [murphs]);
 
 	return (
 		<div className="flex flex-col gap-8">
@@ -74,10 +115,12 @@ function RouteComponent() {
 
 			<div className="flex items-center gap-8">
 				<Avatar className="size-36">
-					<AvatarImage src="https://github.com/shadcn.png" />
-					<AvatarFallback>UN</AvatarFallback>
+					{/*
+                <AvatarImage src="https://github.com/shadcn.png" />
+                  */}
+					<AvatarFallback>{username?.charAt(0) ?? "Anon"}</AvatarFallback>
 				</Avatar>
-				<h2 className="font-bold text-2xl">us3rn@m3</h2>
+				<h2 className="font-bold text-2xl">{username}</h2>
 			</div>
 
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

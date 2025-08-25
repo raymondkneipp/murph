@@ -14,11 +14,11 @@ function RouteComponent() {
 					<Brand />
 					<nav className="flex items-center gap-4">
 						<Button asChild>
-							<Link to="/">Sign Up</Link>
+							<Link to="/signup">Sign Up</Link>
 						</Button>
 
 						<Button asChild variant="secondary">
-							<Link to="/">Login</Link>
+							<Link to="/login">Login</Link>
 						</Button>
 					</nav>
 				</div>
