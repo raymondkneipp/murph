@@ -18,7 +18,7 @@ function RouteComponent() {
 						</Button>
 
 						<Button asChild variant="secondary">
-							<Link to="/">Sign In</Link>
+							<Link to="/">Login</Link>
 						</Button>
 					</nav>
 				</div>
@@ -37,7 +37,7 @@ function RouteComponent() {
 
 				<hr />
 
-				<p className="text-center text-sm text-pretty">
+				<p className="text-center text-sm text-pretty text-muted-foreground">
 					© 2025 Murph Workout App. All rights reserved. Built to honor our
 					heroes.
 				</p>
