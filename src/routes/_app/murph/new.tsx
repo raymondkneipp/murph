@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/card";
 import { SegmentedProgress } from "@/components/ui/segmented-progress";
 import { useMurph } from "@/hooks/use-murph";
-import { cn } from "@/lib/utils";
+import { cn, formatTimeDifference } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_app/murph/new")({
@@ -98,17 +98,6 @@ function RouteComponent() {
 		const elapsed = Date.now() - murphState.exercisesEndTime.getTime();
 		const requiredTime = (minutes * 60 + (seconds || 0)) * 1000;
 		return elapsed < requiredTime;
-	};
-
-	// Helper function to format time difference in HH:MM:SS
-	const formatTimeDifference = (startTime: Date, endTime: Date): string => {
-		const diffMs = endTime.getTime() - startTime.getTime();
-		const diffSeconds = Math.floor(diffMs / 1000);
-		const hours = Math.floor(diffSeconds / 3600);
-		const minutes = Math.floor((diffSeconds % 3600) / 60);
-		const seconds = diffSeconds % 60;
-
-		return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 	};
 
 	// Constants for run distances with time requirements

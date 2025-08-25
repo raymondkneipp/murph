@@ -4,13 +4,16 @@ import { db } from "@/db";
 import { Murph, murphsTable } from "@/db/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMemo } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	AwardIcon,
 	BabyIcon,
+	BadgeIcon,
 	BicepsFlexedIcon,
 	CatIcon,
 	CrownIcon,
 	FlameIcon,
+	HashIcon,
 	Icon,
 	MailIcon,
 	RabbitIcon,
@@ -29,6 +32,8 @@ import {
 	pig,
 } from "@lucide/lab";
 import { MurphBadge } from "@/components/murph-badge";
+import { Icon as CustomIcons } from "@/components/icon";
+import { formatNumber, formatTimeDifference } from "@/lib/utils";
 
 const getUserMurphs = createServerFn({ method: "GET" }).handler(async () => {
 	return db.select().from(murphsTable);
@@ -41,6 +46,10 @@ export const Route = createFileRoute("/_app/me")({
 
 function murphMetrics(murphs: Murph[]) {
 	return {
+		totalDistance: murphs.reduce(
+			(prev, cur) => prev + cur.firstRunDistance + cur.secondRunDistance,
+			0,
+		),
 		totalPullups: murphs.reduce((prev, cur) => prev + cur.pullups, 0),
 		totalPushups: murphs.reduce((prev, cur) => prev + cur.pushups, 0),
 		totalSquats: murphs.reduce((prev, cur) => prev + cur.squats, 0),
@@ -51,15 +60,140 @@ function murphMetrics(murphs: Murph[]) {
 function RouteComponent() {
 	let murphs = Route.useLoaderData();
 
-	const { totalPullups, totalPushups, totalSquats, totalMurphs } = useMemo(
-		() => murphMetrics(murphs),
-		[murphs],
-	);
+	const {
+		totalDistance,
+		totalPullups,
+		totalPushups,
+		totalSquats,
+		totalMurphs,
+	} = useMemo(() => murphMetrics(murphs), [murphs]);
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-8">
 			<h1 className="font-bold text-3xl">My Profile</h1>
 
+			<div className="flex items-center gap-8">
+				<Avatar className="size-36">
+					<AvatarImage src="https://github.com/shadcn.png" />
+					<AvatarFallback>UN</AvatarFallback>
+				</Avatar>
+				<h2 className="font-bold text-2xl">us3rn@m3</h2>
+			</div>
+
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				<div className="flex items-center gap-3">
+					<CustomIcons.Pullup className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{formatNumber(totalPullups)}</p>
+						<h3 className="text-xs">Total Pullups</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<CustomIcons.Pushup className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{formatNumber(totalPushups)}</p>
+						<h3 className="text-xs">Total Pushups</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<CustomIcons.Squat className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{formatNumber(totalSquats)}</p>
+						<h3 className="text-xs">Total Squats</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<CustomIcons.Running className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{formatNumber(totalDistance)} mi</p>
+						<h3 className="text-xs">Total Distance</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<HashIcon className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{formatNumber(totalMurphs)}</p>
+						<h3 className="text-xs">Total Murphs</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<BadgeIcon className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">?? / ??</p>
+						<h3 className="text-xs">Badges Unlocked</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<TimerIcon className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">??:??:??</p>
+						<h3 className="text-xs">Fastest Time</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<FlameIcon className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">??</p>
+						<h3 className="text-xs">Longest Streak</h3>
+					</div>
+				</div>
+			</div>
+
+			<div className="flex flex-col gap-2">
+				{murphs.map((m) => (
+					<Card>
+						<CardContent>
+							<div className="flex items-center gap-1.5">
+								<CustomIcons.Running className="size-4" />
+								{m.firstRunDistance} mi
+							</div>
+
+							<p>
+								First run time:{" "}
+								{formatTimeDifference(m.startTime, m.firstRunEndTime)}
+							</p>
+
+							<div className="flex items-center gap-1.5">
+								<CustomIcons.Pullup className="size-4" />
+								{m.pullups} pullups
+							</div>
+
+							<div className="flex items-center gap-1.5">
+								<CustomIcons.Pushup className="size-4" />
+								{m.pushups} pushups
+							</div>
+
+							<p>
+								Exercise time:{" "}
+								{formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}
+							</p>
+
+							<div className="flex items-center gap-1.5">
+								<CustomIcons.Running className="size-4" />
+								{m.secondRunDistance} mi
+							</div>
+
+							<p>
+								Second run time:{" "}
+								{formatTimeDifference(m.exercisesEndTime, m.secondRunEndTime)}
+							</p>
+							<p>
+								total time:{" "}
+								{formatTimeDifference(m.startTime, m.secondRunEndTime)}
+							</p>
+						</CardContent>
+					</Card>
+				))}
+			</div>
+
+			<h2 className="font-bold text-2xl">Badges</h2>
 			<p>Complete X murphs</p>
 			<div className="flex">
 				<MurphBadge level={1}>5</MurphBadge>
@@ -344,35 +478,6 @@ function RouteComponent() {
 					<MailIcon className="size-7" />
 				</MurphBadge>
 			</div>
-
-			<Card>
-				<CardContent className="grid grid-cols-4">
-					<div className="flex flex-col items-center">
-						<p className="text-3xl font-bold">{totalPullups}</p>
-						<h2>Total Pullups</h2>
-					</div>
-					<div className="flex flex-col items-center">
-						<p className="text-3xl font-bold">{totalPushups}</p>
-						<h2>Total Pushups</h2>
-					</div>
-					<div className="flex flex-col items-center">
-						<p className="text-3xl font-bold">{totalSquats}</p>
-						<h2>Total Squats</h2>
-					</div>
-					<div className="flex flex-col items-center">
-						<p className="text-3xl font-bold">{totalMurphs}</p>
-						<h2>Total Murphs</h2>
-					</div>
-				</CardContent>
-			</Card>
-
-			{murphs.map((m) => (
-				<Card>
-					<CardContent>
-						<pre>{JSON.stringify(m, null, 2)}</pre>
-					</CardContent>
-				</Card>
-			))}
 		</div>
 	);
 }

@@ -21,7 +21,7 @@ function RouteComponent() {
 		<>
 			<header className="flex items-center gap-2 justify-between container md:pt-16 pt-4 pb-4 flex-col md:flex-row">
 				<Brand />
-				<nav className="flex items-center gap-2">
+				<nav className="flex items-center">
 					<Button asChild variant="ghost">
 						<Link to="/feed">Home</Link>
 					</Button>
