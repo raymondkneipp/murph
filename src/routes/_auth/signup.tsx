@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 import { useAppForm } from "../../hooks/demo.form";
-import { authClient } from "@/lib/auth-client";
+import { signUp } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_auth/signup")({
 	component: RouteComponent,
@@ -27,10 +27,8 @@ function RouteComponent() {
 			onChange: schema,
 		},
 		onSubmit: async ({ value }) => {
-			await authClient.signUp.email(value, {
-				onSuccess() {
-					router.navigate({ to: "/feed" });
-				},
+			await signUp.email(value, {
+				onSuccess: () => router.navigate({ to: "/feed" }),
 			});
 		},
 	});

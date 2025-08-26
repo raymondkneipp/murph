@@ -18,33 +18,32 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getUserName } from "./me";
-import { authClient } from "@/lib/auth-client";
+import { getUserId } from "@/lib/auth-server-fn";
+import { signOut } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
-	beforeLoad: async ({ location }) => {
-		console.log("beforeLoad");
-		const session = await authClient.getSession();
-		console.log({ session });
+	beforeLoad: async () => {
+		const userId = await getUserId();
 
-		if (!session.data) {
-			throw redirect({
-				to: "/login",
-				search: {
-					// Use the current location to power a redirect after login
-					// (Do not use `router.state.resolvedLocation` as it can
-					// potentially lag behind the actual current location)
-					redirect: location.href,
-				},
-			});
-		}
+		return {
+			userId,
+		};
 	},
 
-	loader: async () => await getUserName(),
+	loader: async ({ context }) => {
+		if (!context.userId) {
+			throw redirect({ to: "/" });
+		}
+
+		return {
+			username: await getUserName(),
+		};
+	},
 });
 
 function RouteComponent() {
-	const username = Route.useLoaderData();
+	const { username } = Route.useLoaderData();
 	const router = useRouter();
 
 	return (
@@ -88,8 +87,12 @@ function RouteComponent() {
 							<DropdownMenuItem
 								className="text-destructive"
 								onClick={() => {
-									authClient.signOut();
-									router.navigate({ to: "/login" });
+									signOut(
+										{},
+										{
+											onSuccess: () => router.navigate({ to: "/" }),
+										},
+									);
 								}}
 							>
 								Logout

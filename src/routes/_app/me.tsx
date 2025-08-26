@@ -37,6 +37,24 @@ import { formatNumber, formatTimeDifference } from "@/lib/utils";
 import { getWebRequest } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { Badge } from "@/components/ui/badge";
+
+function RunBadge({ distance }: { distance: number }) {
+	switch (distance) {
+		case 0:
+			return <Badge variant="destructive">{distance} mi</Badge>;
+		case 0.25:
+			return <Badge variant="default">{distance} mi</Badge>;
+		case 0.5:
+			return <Badge variant="secondary">{distance} mi</Badge>;
+		case 0.75:
+			return <Badge variant="outline">{distance} mi</Badge>;
+		case 1:
+			return <Badge variant="success">{distance} mi</Badge>;
+		default:
+			return <Badge>{distance} mi</Badge>;
+	}
+}
 
 const getUserMurphs = createServerFn({ method: "GET" }).handler(async () => {
 	const request = getWebRequest();
@@ -190,47 +208,57 @@ function RouteComponent() {
 			</div>
 
 			<div className="flex flex-col gap-2">
-				{murphs.map((m) => (
+				{murphs?.map((m) => (
 					<Card>
-						<CardContent>
-							<div className="flex items-center gap-1.5">
-								<CustomIcons.Running className="size-4" />
-								{m.firstRunDistance} mi
+						<CardContent className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+							<div className="flex flex-col gap-1">
+								<div className="flex items-center gap-1.5">
+									<CustomIcons.Running className="size-4" />
+									<RunBadge distance={m.firstRunDistance} />
+								</div>
+								<p>{formatTimeDifference(m.startTime, m.firstRunEndTime)}</p>
 							</div>
 
-							<p>
-								First run time:{" "}
-								{formatTimeDifference(m.startTime, m.firstRunEndTime)}
-							</p>
+							<div className="flex flex-col gap-1">
+								<div className="flex gap-2">
+									<div className="flex items-center gap-1.5">
+										<CustomIcons.Pullup className="size-4" />
+										{m.pullups}
+									</div>
 
-							<div className="flex items-center gap-1.5">
-								<CustomIcons.Pullup className="size-4" />
-								{m.pullups} pullups
+									<div className="flex items-center gap-1.5">
+										<CustomIcons.Pushup className="size-4" />
+										{m.pushups}
+									</div>
+
+									<div className="flex items-center gap-1.5">
+										<CustomIcons.Squat className="size-4" />
+										{m.squats}
+									</div>
+								</div>
+
+								<p>
+									{formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}
+								</p>
 							</div>
 
-							<div className="flex items-center gap-1.5">
-								<CustomIcons.Pushup className="size-4" />
-								{m.pushups} pushups
+							<div className="flex flex-col gap-1">
+								<div className="flex items-center gap-1.5">
+									<CustomIcons.Running className="size-4" />
+									<RunBadge distance={m.secondRunDistance} />
+								</div>
+								<p>
+									{formatTimeDifference(m.exercisesEndTime, m.secondRunEndTime)}
+								</p>
 							</div>
 
-							<p>
-								Exercise time:{" "}
-								{formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}
-							</p>
-
-							<div className="flex items-center gap-1.5">
-								<CustomIcons.Running className="size-4" />
-								{m.secondRunDistance} mi
+							<div className="flex flex-col gap-1">
+								<div className="flex items-center gap-1.5">
+									<TimerIcon className="size-4" />
+									Total Time
+								</div>
+								<p>{formatTimeDifference(m.startTime, m.secondRunEndTime)}</p>
 							</div>
-
-							<p>
-								Second run time:{" "}
-								{formatTimeDifference(m.exercisesEndTime, m.secondRunEndTime)}
-							</p>
-							<p>
-								total time:{" "}
-								{formatTimeDifference(m.startTime, m.secondRunEndTime)}
-							</p>
 						</CardContent>
 					</Card>
 				))}

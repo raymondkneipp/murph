@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 import { useAppForm } from "../../hooks/demo.form";
-import { authClient } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 
 const schema = z.object({
 	email: z.string().min(1, "Email is required"),
@@ -25,10 +25,8 @@ function RouteComponent() {
 			onChange: schema,
 		},
 		onSubmit: async ({ value }) => {
-			await authClient.signIn.email(value, {
-				onSuccess() {
-					router.navigate({ to: "/feed" });
-				},
+			await signIn.email(value, {
+				onSuccess: () => router.navigate({ to: "/feed" }),
 			});
 		},
 	});
