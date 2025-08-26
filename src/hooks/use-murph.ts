@@ -28,7 +28,7 @@ type MurphState = Omit<
 		NewMurph,
 		"startTime" | "firstRunEndTime" | "exercisesEndTime" | "secondRunEndTime"
 	>,
-	"userId"
+	"userId" | "murphType"
 >;
 
 const INITIAL_MURPH: MurphState = {

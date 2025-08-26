@@ -38,23 +38,7 @@ import { getWebRequest } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
-
-function RunBadge({ distance }: { distance: number }) {
-	switch (distance) {
-		case 0:
-			return <Badge variant="destructive">{distance} mi</Badge>;
-		case 0.25:
-			return <Badge variant="default">{distance} mi</Badge>;
-		case 0.5:
-			return <Badge variant="secondary">{distance} mi</Badge>;
-		case 0.75:
-			return <Badge variant="outline">{distance} mi</Badge>;
-		case 1:
-			return <Badge variant="success">{distance} mi</Badge>;
-		default:
-			return <Badge>{distance} mi</Badge>;
-	}
-}
+import { MurphItem } from "@/components/murph-item";
 
 const getUserMurphs = createServerFn({ method: "GET" }).handler(async () => {
 	const request = getWebRequest();
@@ -112,7 +96,29 @@ function murphMetrics(murphs: Murph[]) {
 		totalPullups: murphs.reduce((prev, cur) => prev + cur.pullups, 0),
 		totalPushups: murphs.reduce((prev, cur) => prev + cur.pushups, 0),
 		totalSquats: murphs.reduce((prev, cur) => prev + cur.squats, 0),
-		totalMurphs: murphs.length,
+		totalMurphs: murphs.reduce((prev, cur) => {
+			let x = 0;
+
+			switch (cur.murphType) {
+				case "Incomplete":
+					x = 0;
+					break;
+				case "1/4 Murph":
+					x = 0.25;
+					break;
+				case "1/2 Murph":
+					x = 0.5;
+					break;
+				case "3/4 Murph":
+					x = 0.75;
+					break;
+				case "Full Murph":
+					x = 1;
+					break;
+			}
+
+			return prev + x;
+		}, 0),
 	};
 }
 
@@ -132,7 +138,7 @@ function RouteComponent() {
 			<h1 className="font-bold text-3xl">My Profile</h1>
 
 			<div className="flex items-center gap-8">
-				<Avatar className="size-36">
+				<Avatar className="size-36 text-6xl">
 					{/*
                 <AvatarImage src="https://github.com/shadcn.png" />
                   */}
@@ -209,58 +215,7 @@ function RouteComponent() {
 
 			<div className="flex flex-col gap-2">
 				{murphs?.map((m) => (
-					<Card>
-						<CardContent className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-							<div className="flex flex-col gap-1">
-								<div className="flex items-center gap-1.5">
-									<CustomIcons.Running className="size-4" />
-									<RunBadge distance={m.firstRunDistance} />
-								</div>
-								<p>{formatTimeDifference(m.startTime, m.firstRunEndTime)}</p>
-							</div>
-
-							<div className="flex flex-col gap-1">
-								<div className="flex gap-2">
-									<div className="flex items-center gap-1.5">
-										<CustomIcons.Pullup className="size-4" />
-										{m.pullups}
-									</div>
-
-									<div className="flex items-center gap-1.5">
-										<CustomIcons.Pushup className="size-4" />
-										{m.pushups}
-									</div>
-
-									<div className="flex items-center gap-1.5">
-										<CustomIcons.Squat className="size-4" />
-										{m.squats}
-									</div>
-								</div>
-
-								<p>
-									{formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}
-								</p>
-							</div>
-
-							<div className="flex flex-col gap-1">
-								<div className="flex items-center gap-1.5">
-									<CustomIcons.Running className="size-4" />
-									<RunBadge distance={m.secondRunDistance} />
-								</div>
-								<p>
-									{formatTimeDifference(m.exercisesEndTime, m.secondRunEndTime)}
-								</p>
-							</div>
-
-							<div className="flex flex-col gap-1">
-								<div className="flex items-center gap-1.5">
-									<TimerIcon className="size-4" />
-									Total Time
-								</div>
-								<p>{formatTimeDifference(m.startTime, m.secondRunEndTime)}</p>
-							</div>
-						</CardContent>
-					</Card>
+					<MurphItem m={m} />
 				))}
 			</div>
 

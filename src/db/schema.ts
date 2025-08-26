@@ -1,4 +1,12 @@
-import { int, integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sql, type SQL } from "drizzle-orm";
+import {
+	int,
+	integer,
+	real,
+	sqliteTable,
+	text,
+	index,
+} from "drizzle-orm/sqlite-core";
 
 export const murphsTable = sqliteTable("murphs_table", {
 	id: int().primaryKey({ autoIncrement: true }),
@@ -19,6 +27,43 @@ export const murphsTable = sqliteTable("murphs_table", {
 	userId: text()
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
+
+	murphType: text("murphType").generatedAlwaysAs(
+		(): SQL => sql`
+    CASE
+      WHEN ${murphsTable.firstRunDistance} >= 1
+       AND ${murphsTable.secondRunDistance} >= 1
+       AND ${murphsTable.pullups} >= 100
+       AND ${murphsTable.pushups} >= 200
+       AND ${murphsTable.squats} >= 300
+      THEN 'Full Murph'
+
+      WHEN ${murphsTable.firstRunDistance} >= 0.75
+       AND ${murphsTable.secondRunDistance} >= 0.75
+       AND ${murphsTable.pullups} >= 75
+       AND ${murphsTable.pushups} >= 150
+       AND ${murphsTable.squats} >= 225
+      THEN '3/4 Murph'
+
+      WHEN ${murphsTable.firstRunDistance} >= 0.5
+       AND ${murphsTable.secondRunDistance} >= 0.5
+       AND ${murphsTable.pullups} >= 50
+       AND ${murphsTable.pushups} >= 100
+       AND ${murphsTable.squats} >= 150
+      THEN '1/2 Murph'
+
+      WHEN ${murphsTable.firstRunDistance} >= 0.25
+       AND ${murphsTable.secondRunDistance} >= 0.25
+       AND ${murphsTable.pullups} >= 25
+       AND ${murphsTable.pushups} >= 50
+       AND ${murphsTable.squats} >= 75
+      THEN '1/4 Murph'
+
+      ELSE 'Incomplete'
+    END
+  `,
+		{ mode: "virtual" },
+	),
 });
 
 export type NewMurph = Omit<typeof murphsTable.$inferSelect, "id">;

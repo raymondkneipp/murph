@@ -1,10 +1,29 @@
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { getUserId } from "@/lib/auth-server-fn";
+import {
+	createFileRoute,
+	Link,
+	Outlet,
+	redirect,
+} from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_auth")({
 	component: RouteComponent,
+	beforeLoad: async () => {
+		const userId = await getUserId();
+
+		return {
+			userId,
+		};
+	},
+
+	loader: async ({ context }) => {
+		if (context.userId) {
+			throw redirect({ to: "/feed" });
+		}
+	},
 });
 
 function RouteComponent() {

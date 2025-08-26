@@ -332,63 +332,6 @@ Do you want me to sketch **database tables/relations** for this structure (users
 
 RUN MURPH IN GROUP OR WITH FRIEND
 
-
-Got it 👍 You can create a **generated column** in SQLite with Drizzle that categorizes each record into `"1/4 Murph"`, `"1/2 Murph"`, `"3/4 Murph"`, `"Full Murph"`, or `"Incomplete"` based on the distances and reps.
-
-Here’s how you could model it:
-
-```ts
-import { sqliteTable, integer, real, text } from "drizzle-orm/sqlite-core";
-
-export const murphsTable = sqliteTable("murphs", {
-  id: integer("id").primaryKey(),
-
-  pullups: integer("pullups").notNull().default(0),
-  pushups: integer("pushups").notNull().default(0),
-  squats: integer("squats").notNull().default(0),
-
-  firstRunDistance: real("firstRunDistance").notNull().default(0),
-  secondRunDistance: real("secondRunDistance").notNull().default(0),
-
-  // Virtual generated column
-  murphType: text("murphType", {
-    mode: "virtual",
-  }).generatedAs(
-    `
-    CASE
-      WHEN firstRunDistance = 0.25 AND secondRunDistance = 0.25
-        AND pullups >= 25 AND pushups >= 50 AND squats >= 75
-      THEN '1/4 Murph'
-
-      WHEN firstRunDistance = 0.5 AND secondRunDistance = 0.5
-        AND pullups >= 50 AND pushups >= 100 AND squats >= 150
-      THEN '1/2 Murph'
-
-      WHEN firstRunDistance = 0.75 AND secondRunDistance = 0.75
-        AND pullups >= 75 AND pushups >= 150 AND squats >= 225
-      THEN '3/4 Murph'
-
-      WHEN firstRunDistance = 1 AND secondRunDistance = 1
-        AND pullups >= 100 AND pushups >= 200 AND squats >= 300
-      THEN 'Full Murph'
-
-      ELSE 'Incomplete'
-    END
-    `,
-    { type: "text" },
-  ),
-});
-```
-
-### ✅ How this works:
-
-* Uses a `CASE` expression to check run distances and exercise counts.
-* Each fraction of a Murph requires proportional distances and reps (¼, ½, ¾, full).
-* If conditions aren’t met → `"Incomplete"`.
-* This is a **virtual column** so it’s computed on read (doesn’t take storage).
-
----
-
-Do you want me to also make it **stored** instead of **virtual** (so it’s computed once and kept in the DB, faster for reads), or do you prefer always-calculated (`virtual`)?
-
 SETUP BETTER ID RATHER THAN AUTO INC
+
+PERSIST MURPH WHEN REFRESH OR EXITING APP
