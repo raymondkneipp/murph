@@ -32,9 +32,9 @@ export function MurphItem({
 	};
 }) {
 	return (
-		<Card>
+		<Card className="p-2 gap-0">
 			{m.userName && (
-				<CardHeader className="flex items-center gap-2">
+				<CardHeader className="flex items-center gap-2 p-2">
 					<Avatar>
 						{/*
                 <AvatarImage src="https://github.com/shadcn.png" />
@@ -44,51 +44,56 @@ export function MurphItem({
 					<CardTitle>{m.userName ?? "Me"}</CardTitle>
 				</CardHeader>
 			)}
-			<CardContent className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+			<CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 p-2">
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-1.5">
 						<CustomIcons.Running className="size-4" />
-						{m.firstRunDistance}
+						<p>{m.firstRunDistance} mi</p>
 					</div>
-					<p>{formatTimeDifference(m.startTime, m.firstRunEndTime)}</p>
+					<p>First Run</p>
 				</div>
+
 				<div className="flex flex-col gap-1">
-					<div className="flex gap-2">
-						<div className="flex items-center gap-1.5">
-							<CustomIcons.Pullup className="size-4" />
-							{m.pullups}
-						</div>
-
-						<div className="flex items-center gap-1.5">
-							<CustomIcons.Pushup className="size-4" />
-							{m.pushups}
-						</div>
-
-						<div className="flex items-center gap-1.5">
-							<CustomIcons.Squat className="size-4" />
-							{m.squats}
-						</div>
+					<div className="flex items-center gap-1.5">
+						<CustomIcons.Pullup className="size-4" />
+						<p>{m.pullups}</p>
 					</div>
-
-					<p>{formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}</p>
+					<p>Pullups</p>
 				</div>
+
+				<div className="flex flex-col gap-1">
+					<div className="flex items-center gap-1.5">
+						<CustomIcons.Pushup className="size-4" />
+						<p>{m.pushups}</p>
+					</div>
+					<p>Pushups</p>
+				</div>
+
+				<div className="flex flex-col gap-1">
+					<div className="flex items-center gap-1.5">
+						<CustomIcons.Squat className="size-4" />
+						<p>{m.squats}</p>
+					</div>
+					<p>Squats</p>
+				</div>
+
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-1.5">
 						<CustomIcons.Running className="size-4" />
-						{m.secondRunDistance}
+						{m.secondRunDistance} mi
 					</div>
-					<p>{formatTimeDifference(m.exercisesEndTime, m.secondRunEndTime)}</p>
+					<p>Second Run</p>
 				</div>
 
-				<p className="text-sm">{m.murphType}</p>
-				<MurphTypeBadge type={m.murphType} />
-
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col md:items-end gap-1">
 					<div className="flex items-center gap-1.5">
 						<TimerIcon className="size-4" />
-						Total Time
+						<p>{formatTimeDifference(m.startTime, m.secondRunEndTime)}</p>
 					</div>
-					<p>{formatTimeDifference(m.startTime, m.secondRunEndTime)}</p>
+					<MurphTypeBadge type={m.murphType} />
+					<p>
+						{new Intl.DateTimeFormat("en-US").format(new Date(m.startTime))}
+					</p>
 				</div>
 			</CardContent>
 		</Card>

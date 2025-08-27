@@ -375,7 +375,10 @@ function RouteComponent() {
 			{isAtStage("completed") && (
 				<div className="flex flex-col gap-4 mt-4 items-center">
 					{isSaving ? (
-						<LoaderIcon className="animate-spin" />
+						<div className="flex items-center justify-center gap-2 text-muted-foreground">
+							<LoaderIcon className="animate-spin" />
+							<p>Saving murph</p>
+						</div>
 					) : (
 						<>
 							{isSaveSuccess ? (

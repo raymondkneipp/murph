@@ -27,6 +27,7 @@ function RouteComponent() {
 		onSubmit: async ({ value }) => {
 			await signIn.email(value, {
 				onSuccess: () => router.navigate({ to: "/feed" }),
+				onError: () => alert("Something went wrong. Try again later."),
 			});
 		},
 	});

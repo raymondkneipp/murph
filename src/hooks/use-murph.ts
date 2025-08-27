@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { redirect } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import z from "zod";
@@ -7,8 +8,7 @@ import type { NewMurph } from "@/db/schema";
 import { murphsTable } from "@/db/schema";
 import { clamp, toMilliseconds } from "@/lib/utils";
 import { useStopwatch } from "./use-stopwatch";
-import { getWebRequest } from "@tanstack/react-start/server";
-import { auth } from "@/lib/auth";
+import { authMiddleware } from "@/lib/auth-middleware";
 
 type NullableFields<T, K extends keyof T> = {
 	[P in keyof T]: P extends K ? T[P] | null : T[P];
@@ -69,22 +69,17 @@ const addMurph = createServerFn({ method: "POST" })
 			secondRunEndTime: z.date(),
 		}),
 	)
-	.handler(async ({ data }) => {
-		const request = getWebRequest();
-		if (!request?.headers) {
-			return null;
-		}
-		const session = await auth.api.getSession({
-			headers: request.headers,
-		});
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		const { user } = context;
 
-		if (!session?.user) {
-			throw new Error("Unauthorized");
+		if (!user.id) {
+			throw redirect({ to: "/login" });
 		}
 
 		return db
 			.insert(murphsTable)
-			.values({ ...data, userId: session.user.id })
+			.values({ ...data, userId: user.id })
 			.returning();
 	});
 
