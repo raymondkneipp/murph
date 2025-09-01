@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_marketing")({
 function RouteComponent() {
 	return (
 		<>
-			<header className="bg-muted sticky md:-top-12 top-0">
+			<header className="bg-muted sticky md:-top-12 top-0 z-100">
 				<div className="flex items-center justify-between container md:pt-16 pt-4 pb-4">
 					<Brand />
 					<nav className="flex items-center gap-4">

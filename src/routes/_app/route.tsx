@@ -17,9 +17,9 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getUserName } from "./me";
-import { getUserId } from "@/lib/auth-server-fn";
 import { signOut } from "@/lib/auth-client";
+import { getUserId } from "@/lib/auth-server-fn";
+import { getUserName } from "./me";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,

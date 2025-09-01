@@ -6,9 +6,9 @@ import z from "zod";
 import { db } from "@/db";
 import type { NewMurph } from "@/db/schema";
 import { murphsTable } from "@/db/schema";
+import { authMiddleware } from "@/lib/auth-middleware";
 import { clamp, toMilliseconds } from "@/lib/utils";
 import { useStopwatch } from "./use-stopwatch";
-import { authMiddleware } from "@/lib/auth-middleware";
 
 type NullableFields<T, K extends keyof T> = {
 	[P in keyof T]: P extends K ? T[P] | null : T[P];

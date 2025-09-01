@@ -11,7 +11,6 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as UsernameRouteImport } from './routes/$username'
 import { Route as DemoRouteRouteImport } from './routes/demo/route'
 import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
@@ -21,6 +20,7 @@ import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoTableRouteImport } from './routes/demo/table'
+import { Route as MarketingLeaderboardRouteImport } from './routes/_marketing/leaderboard'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
@@ -37,11 +37,6 @@ import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/
 
 const rootServerRouteImport = createServerRootRoute()
 
-const LeaderboardRoute = LeaderboardRouteImport.update({
-  id: '/leaderboard',
-  path: '/leaderboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const UsernameRoute = UsernameRouteImport.update({
   id: '/$username',
   path: '/$username',
@@ -83,6 +78,11 @@ const DemoTableRoute = DemoTableRouteImport.update({
   id: '/table',
   path: '/table',
   getParentRoute: () => DemoRouteRoute,
+} as any)
+const MarketingLeaderboardRoute = MarketingLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => MarketingRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -153,12 +153,12 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/demo': typeof DemoRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/leaderboard': typeof LeaderboardRoute
   '/feed': typeof AppFeedRoute
   '/me': typeof AppMeRoute
   '/settings': typeof AppSettingsRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
+  '/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
@@ -172,12 +172,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/demo': typeof DemoRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/leaderboard': typeof LeaderboardRoute
   '/feed': typeof AppFeedRoute
   '/me': typeof AppMeRoute
   '/settings': typeof AppSettingsRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
+  '/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
@@ -195,12 +195,12 @@ export interface FileRoutesById {
   '/_marketing': typeof MarketingRouteRouteWithChildren
   '/demo': typeof DemoRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/leaderboard': typeof LeaderboardRoute
   '/_app/feed': typeof AppFeedRoute
   '/_app/me': typeof AppMeRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/_marketing/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
@@ -216,12 +216,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/demo'
     | '/$username'
-    | '/leaderboard'
     | '/feed'
     | '/me'
     | '/settings'
     | '/login'
     | '/signup'
+    | '/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
@@ -235,12 +235,12 @@ export interface FileRouteTypes {
   to:
     | '/demo'
     | '/$username'
-    | '/leaderboard'
     | '/feed'
     | '/me'
     | '/settings'
     | '/login'
     | '/signup'
+    | '/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
@@ -257,12 +257,12 @@ export interface FileRouteTypes {
     | '/_marketing'
     | '/demo'
     | '/$username'
-    | '/leaderboard'
     | '/_app/feed'
     | '/_app/me'
     | '/_app/settings'
     | '/_auth/login'
     | '/_auth/signup'
+    | '/_marketing/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
@@ -280,7 +280,6 @@ export interface RootRouteChildren {
   MarketingRouteRoute: typeof MarketingRouteRouteWithChildren
   DemoRouteRoute: typeof DemoRouteRouteWithChildren
   UsernameRoute: typeof UsernameRoute
-  LeaderboardRoute: typeof LeaderboardRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
@@ -314,13 +313,6 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/leaderboard': {
-      id: '/leaderboard'
-      path: '/leaderboard'
-      fullPath: '/leaderboard'
-      preLoaderRoute: typeof LeaderboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$username': {
       id: '/$username'
       path: '/$username'
@@ -383,6 +375,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/table'
       preLoaderRoute: typeof DemoTableRouteImport
       parentRoute: typeof DemoRouteRoute
+    }
+    '/_marketing/leaderboard': {
+      id: '/_marketing/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof MarketingLeaderboardRouteImport
+      parentRoute: typeof MarketingRouteRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
@@ -517,10 +516,12 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface MarketingRouteRouteChildren {
+  MarketingLeaderboardRoute: typeof MarketingLeaderboardRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
 }
 
 const MarketingRouteRouteChildren: MarketingRouteRouteChildren = {
+  MarketingLeaderboardRoute: MarketingLeaderboardRoute,
   MarketingIndexRoute: MarketingIndexRoute,
 }
 
@@ -556,7 +557,6 @@ const rootRouteChildren: RootRouteChildren = {
   MarketingRouteRoute: MarketingRouteRouteWithChildren,
   DemoRouteRoute: DemoRouteRouteWithChildren,
   UsernameRoute: UsernameRoute,
-  LeaderboardRoute: LeaderboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

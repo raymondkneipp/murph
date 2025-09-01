@@ -44,7 +44,7 @@ function App() {
 						</Button>
 
 						<Button asChild size="lg" variant="outline">
-							<Link to="/">
+							<Link to="/leaderboard">
 								<TrophyIcon />
 								View Leaderboard
 							</Link>
@@ -239,7 +239,7 @@ function App() {
 						</Button>
 
 						<Button asChild size="lg" variant="secondary">
-							<Link to="/">
+							<Link to="/leaderboard">
 								<TrophyIcon />
 								View Leaderboard
 							</Link>

@@ -64,6 +64,11 @@ export const murphsTable = sqliteTable("murphs_table", {
   `,
 		{ mode: "virtual" },
 	),
+
+	duration: integer("duration").generatedAlwaysAs(
+		(): SQL => sql`${murphsTable.secondRunEndTime} - ${murphsTable.startTime}`,
+		{ mode: "virtual" },
+	),
 });
 
 export type NewMurph = Omit<typeof murphsTable.$inferSelect, "id">;

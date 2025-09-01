@@ -18,6 +18,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -30,7 +31,6 @@ import {
 import { SegmentedProgress } from "@/components/ui/segmented-progress";
 import { useMurph } from "@/hooks/use-murph";
 import { cn, formatTimeDifference } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_app/murph/new")({
 	component: RouteComponent,
