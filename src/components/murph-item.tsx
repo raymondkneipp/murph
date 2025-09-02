@@ -81,7 +81,11 @@ export function MurphItem({
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger>
-				<Card className="gap-2 p-4 cursor-pointer">
+				<Card
+					className={cn("gap-2 p-2 cursor-pointer", {
+						"p-4": showUser,
+					})}
+				>
 					{showUser && (
 						<CardHeader className="px-0">
 							<div className="flex items-center gap-2">
@@ -103,6 +107,7 @@ export function MurphItem({
 							value={m.firstRunDistance + m.secondRunDistance}
 							icon={CustomIcons.Running}
 							className="border-r"
+							unit=" mi"
 						/>
 						<Stat
 							name="Pullups"
@@ -136,7 +141,7 @@ export function MurphItem({
 						/>
 					</CardContent>
 
-					<CardFooter className="flex md:hidden items-center justify-between gap-2 px-0 flex-wrap">
+					<CardFooter className="flex md:hidden items-center justify-around gap-2 px-0 flex-wrap">
 						<div className="flex gap-2 items-center">
 							<CalendarIcon className="size-4" />
 							<p className="font-bold text-sm">
@@ -204,6 +209,7 @@ export function MurphItem({
 						name="First Run"
 						icon={CustomIcons.Running}
 						value={m.firstRunDistance}
+						unit=" mi"
 					/>
 					<Stat name="Pullups" icon={CustomIcons.Pullup} value={m.pullups} />
 					<Stat name="Pushups" icon={CustomIcons.Pushup} value={m.pushups} />
@@ -212,6 +218,7 @@ export function MurphItem({
 						name="Second Run"
 						icon={CustomIcons.Running}
 						value={m.secondRunDistance}
+						unit=" mi"
 					/>
 
 					<div className="flex items-center justify-center">
@@ -269,14 +276,16 @@ function Stat(props: {
 	value: number | string;
 	icon: React.ElementType;
 	className?: string;
+	unit?: string;
 }) {
 	return (
-		<div
-			className={cn("flex flex-col gap-0 items-center pb-2", props.className)}
-		>
+		<div className={cn("flex flex-col gap-0 items-center", props.className)}>
 			<props.icon className="size-4" />
 
-			<p className="font-bold text-lg">{props.value}</p>
+			<p className="font-bold text-lg">
+				{props.value}
+				{props.unit}
+			</p>
 
 			<p className="text-xs">{props.name}</p>
 		</div>
