@@ -18,31 +18,31 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
-import { getUserIdServerFn, getUserNameServerFn } from "@/lib/api";
+import { getUserServerFn } from "@/lib/api";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
 	beforeLoad: async () => {
-		const userId = await getUserIdServerFn();
+		const user = await getUserServerFn();
 
 		return {
-			userId,
+			user,
 		};
 	},
 
 	loader: async ({ context }) => {
-		if (!context.userId) {
+		if (!context.user.id) {
 			throw redirect({ to: "/" });
 		}
 
 		return {
-			username: await getUserNameServerFn(),
+			user: context.user,
 		};
 	},
 });
 
 function RouteComponent() {
-	const { username } = Route.useLoaderData();
+	const { user } = Route.useLoaderData();
 	const router = useRouter();
 
 	return (
@@ -64,12 +64,10 @@ function RouteComponent() {
 						<DropdownMenuTrigger asChild>
 							<Button variant="ghost">
 								<Avatar>
-									{/*
-                <AvatarImage src="https://github.com/shadcn.png" />
-                  */}
-									<AvatarFallback>{username?.charAt(0)}</AvatarFallback>
+									<AvatarImage src={user.image ?? ""} />
+									<AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
 								</Avatar>
-								<span className="hidden sm:inline">{username}</span>
+								<span className="hidden sm:inline">{user.name}</span>
 								<ChevronDownIcon />
 							</Button>
 						</DropdownMenuTrigger>

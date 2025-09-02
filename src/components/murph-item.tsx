@@ -81,11 +81,7 @@ export function MurphItem({
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger>
-				<Card
-					className={cn("gap-2 p-2 cursor-pointer", {
-						"p-4": showUser,
-					})}
-				>
+				<Card className={cn("gap-4 p-4 cursor-pointer")}>
 					{showUser && (
 						<CardHeader className="px-0">
 							<div className="flex items-center gap-2">

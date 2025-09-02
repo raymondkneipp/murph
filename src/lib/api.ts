@@ -161,20 +161,10 @@ export const getLeaderBoardServerFn = createServerFn({ method: "GET" })
 		};
 	});
 
-export const getUserIdServerFn = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async ({ context }) => {
-		return context?.user?.id;
-	});
-
-export const getUserNameServerFn = createServerFn({ method: "GET" })
+export const getUserServerFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
 		const { user } = context;
 
-		if (!user.id) {
-			throw redirect({ to: "/login" });
-		}
-
-		return user.name;
+		return user;
 	});

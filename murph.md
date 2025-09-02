@@ -345,4 +345,3 @@ Do you want me to sketch **database tables/relations** for this structure (users
 - invite users
 - badges
 - profile picture
-- delete murph

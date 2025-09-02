@@ -1,6 +1,6 @@
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
-import { getUserIdServerFn } from "@/lib/api";
+import { getUserServerFn } from "@/lib/api";
 import {
 	createFileRoute,
 	Link,
@@ -12,15 +12,15 @@ import { ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/_auth")({
 	component: RouteComponent,
 	beforeLoad: async () => {
-		const userId = await getUserIdServerFn();
+		const user = await getUserServerFn();
 
 		return {
-			userId,
+			user,
 		};
 	},
 
 	loader: async ({ context }) => {
-		if (context.userId) {
+		if (context.user.id) {
 			throw redirect({ to: "/feed" });
 		}
 	},
