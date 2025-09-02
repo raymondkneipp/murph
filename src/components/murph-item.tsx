@@ -1,3 +1,27 @@
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { format } from "date-fns";
+import {
+	BicepsFlexedIcon,
+	CalendarIcon,
+	TimerIcon,
+	TrashIcon,
+} from "lucide-react";
+import { useState } from "react";
+import { Icon as CustomIcons } from "@/components/icon";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
 	Card,
 	CardAction,
@@ -7,27 +31,19 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import {
-	BicepsFlexedIcon,
-	CalendarIcon,
-	TimerIcon,
-	TrashIcon,
-} from "lucide-react";
-import { Icon as CustomIcons } from "@/components/icon";
-import { cn, formatTimeDifference } from "@/lib/utils";
-import { Murph, MurphMaybeWithUser } from "@/db/schema";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
-import { format } from "date-fns";
-import { Badge } from "./ui/badge";
-import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
+import type { Murph, MurphMaybeWithUser } from "@/db/schema";
+import { deleteMurphServerFn } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
+import { cn, formatTimeDifference } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 	switch (type) {
@@ -48,9 +64,21 @@ function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 
 export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 	const { data: userData } = useSession();
+	const router = useRouter();
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	
+	const deleteMurph = useServerFn(deleteMurphServerFn);
+	const { mutate: handleDelete, isPending: isDeleting } = useMutation({
+		mutationFn: () => deleteMurph({ data: { murphId: m.id } }),
+		onSuccess: () => {
+			// Close the dialog and refresh the current route to update the data
+			setIsDialogOpen(false);
+			router.invalidate();
+		},
+	});
 
 	return (
-		<Dialog>
+		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger>
 				<Card className="gap-2 p-4 cursor-pointer">
 					{userData?.user.id !== m.user?.id && (
@@ -191,9 +219,28 @@ export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 				</div>
 
 				{userData?.user.id === m.user?.id && (
-					<Button variant="destructive" onClick={() => alert("todo")}>
-						<TrashIcon /> Delete
-					</Button>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant="destructive" disabled={isDeleting}>
+								<TrashIcon /> {isDeleting ? "Deleting..." : "Delete"}
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This will permanently delete your
+									murph workout from the system.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction onClick={() => handleDelete()}>
+									Delete Murph
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 				)}
 			</DialogContent>
 		</Dialog>

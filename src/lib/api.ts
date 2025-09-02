@@ -1,4 +1,4 @@
-import { redirect } from "@tanstack/react-router";
+import { notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "@/db";
 import { murphsTable } from "@/db/schema";
@@ -46,6 +46,45 @@ export const getAllMurphsServerFn = createServerFn({ method: "GET" }).handler(
 		});
 	},
 );
+
+export const deleteMurphServerFn = createServerFn({ method: "POST" })
+	.validator(
+		z.object({
+			murphId: z.number(),
+		}),
+	)
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		const { user } = context;
+
+		if (!user.id) {
+			throw redirect({ to: "/login" });
+		}
+
+		const murphToDelete = await db.query.murphsTable.findFirst({
+			where: eq(murphsTable.id, data.murphId),
+			with: {
+				user: {
+					columns: {
+						id: true,
+					},
+				},
+			},
+		});
+
+		if (!murphToDelete) {
+			throw notFound();
+		}
+
+		if (murphToDelete.user.id !== user.id) {
+			throw new Error("Unauthorized");
+		}
+
+		return db
+			.delete(murphsTable)
+			.where(eq(murphsTable.id, data.murphId))
+			.returning();
+	});
 
 export const addMurphServerFn = createServerFn({ method: "POST" })
 	.validator(
