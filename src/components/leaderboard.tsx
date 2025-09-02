@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { endOfMonth, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, FrownIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MurphItem } from "./murph-item";
@@ -16,7 +16,7 @@ export function Leaderboard() {
 	const getLeaderBoard = useServerFn(getLeaderBoardServerFn);
 
 	const boardQuery = useQuery({
-		queryKey: ["time"],
+		queryKey: ["Leaderboard", format(date, "yyyy-MM")],
 		queryFn: () => getLeaderBoard({ data: { date: date } }),
 	});
 
@@ -41,10 +41,17 @@ export function Leaderboard() {
 						onMonthSelect={setDate}
 						selectedMonth={date}
 						maxDate={endOfMonth(new Date())}
-						minDate={boardQuery.data?.earliestMurph}
+						minDate={boardQuery.data?.earliestMurph?.startTime ?? new Date()}
 					/>
 				</PopoverContent>
 			</Popover>
+
+			{!boardQuery.data?.topTen.length && (
+				<div className="border border-dashed p-16 rounded-xl flex flex-col items-center text-center gap-4">
+					<FrownIcon className="size-10" />
+					<p>No murphs found for this month.</p>
+				</div>
+			)}
 
 			{boardQuery.data?.topTen.map((m) => (
 				<MurphItem m={m} key={m.id} />

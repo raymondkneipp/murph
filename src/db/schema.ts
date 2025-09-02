@@ -1,4 +1,4 @@
-import { sql, type SQL } from "drizzle-orm";
+import { relations, sql, type SQL } from "drizzle-orm";
 import { int, integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const murphsTable = sqliteTable("murphs_table", {
@@ -68,6 +68,12 @@ export const murphsTable = sqliteTable("murphs_table", {
 
 export type NewMurph = Omit<typeof murphsTable.$inferSelect, "id">;
 export type Murph = typeof murphsTable.$inferSelect;
+export type MurphWithUser = Murph & {
+	user: Pick<typeof user.$inferSelect, "id" | "name" | "image">;
+};
+export type MurphMaybeWithUser = Murph & {
+	user: Pick<typeof user.$inferSelect, "id" | "name" | "image"> | null;
+};
 
 // Auth
 
@@ -134,3 +140,16 @@ export const verification = sqliteTable("verification", {
 		() => /* @__PURE__ */ new Date(),
 	),
 });
+
+// Relations
+
+export const userRelations = relations(user, ({ many }) => ({
+	murphs: many(murphsTable),
+}));
+
+export const murphsRelations = relations(murphsTable, ({ one }) => ({
+	user: one(user, {
+		fields: [murphsTable.userId],
+		references: [user.id],
+	}),
+}));

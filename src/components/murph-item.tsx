@@ -3,8 +3,9 @@ import { TimerIcon } from "lucide-react";
 import { Icon as CustomIcons } from "@/components/icon";
 import { formatTimeDifference } from "@/lib/utils";
 import { Badge } from "./ui/badge";
-import { Murph } from "@/db/schema";
+import { Murph, MurphMaybeWithUser } from "@/db/schema";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 	switch (type) {
@@ -23,25 +24,16 @@ function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 	}
 }
 
-export function MurphItem({
-	m,
-}: {
-	m: Murph & {
-		userId?: string | null;
-		userName?: string | null;
-	};
-}) {
+export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 	return (
 		<Card className="p-2 gap-0">
-			{m.userName && (
+			{m?.user?.name && (
 				<CardHeader className="flex items-center gap-2 p-2">
 					<Avatar>
-						{/*
-                <AvatarImage src="https://github.com/shadcn.png" />
-                  */}
-						<AvatarFallback>{m.userName?.charAt(0) ?? "Anon"}</AvatarFallback>
+						<AvatarImage src={m.user.image ?? ""} />
+						<AvatarFallback>{m.user.name.charAt(0)}</AvatarFallback>
 					</Avatar>
-					<CardTitle>{m.userName ?? "Me"}</CardTitle>
+					<CardTitle>{m.user.name}</CardTitle>
 				</CardHeader>
 			)}
 			<CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 p-2">

@@ -330,17 +330,17 @@ Nice — you’re basically sketching out the **social + fitness tracking flow**
 
 Do you want me to sketch **database tables/relations** for this structure (users, workouts, follows, feed)? That’ll make it crystal clear how to implement.
 
-RUN MURPH IN GROUP OR WITH FRIEND
-
-SETUP BETTER ID RATHER THAN AUTO INC
-
-PERSIST MURPH WHEN REFRESH OR EXITING APP
-
-RUN MURPH OFFLINE
-
-RUN MURPH WITHOUT ACCOUNT
 
 # TODO
 - drizzle-zod
-- dirzzle relations
-
+- setup better id rather than auto inc
+- run murph in group or with friend
+- persist murph when refresh or exiting app
+- run murph offline
+- run murph without account
+- user public profile
+- click on murph item to view user
+- global murphs infinite query
+- search for users
+- invite users
+- badges
