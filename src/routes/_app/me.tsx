@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_app/me")({
 });
 
 function murphMetrics(murphs: Murph[]) {
-	const fullMurphs = murphs.filter((m) => m.murphType === "Full Murph");
+	const fullMurphs = murphs.filter((m) => m.murphType === "FULL");
 
 	// --- fastest murph ---
 	const fastestMurph = fullMurphs.length
@@ -81,16 +81,16 @@ function murphMetrics(murphs: Murph[]) {
 		totalMurphs: murphs.reduce((prev, cur) => {
 			let x = 0;
 			switch (cur.murphType) {
-				case "1/4 Murph":
+				case "QUARTER":
 					x = 0.25;
 					break;
-				case "1/2 Murph":
+				case "HALF":
 					x = 0.5;
 					break;
-				case "3/4 Murph":
+				case "THREE_QUARTER":
 					x = 0.75;
 					break;
-				case "Full Murph":
+				case "FULL":
 					x = 1;
 					break;
 			}

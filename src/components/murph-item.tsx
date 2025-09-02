@@ -6,18 +6,18 @@ import { Badge } from "./ui/badge";
 import { Murph } from "@/db/schema";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
-function MurphTypeBadge({ type }: { type: string | null }) {
+function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 	switch (type) {
-		case "Incomplete":
-			return <Badge variant="destructive">{type}</Badge>;
-		case "1/4 Murph":
-			return <Badge variant="default">{type}</Badge>;
-		case "1/2 Murph":
-			return <Badge variant="accent">{type}</Badge>;
-		case "3/4 Murph":
-			return <Badge variant="outline">{type}</Badge>;
-		case "Full Murph":
-			return <Badge variant="success">{type}</Badge>;
+		case "INCOMPLETE":
+			return <Badge variant="destructive">Incomplete</Badge>;
+		case "QUARTER":
+			return <Badge variant="default">Quarter</Badge>;
+		case "HALF":
+			return <Badge variant="accent">Half</Badge>;
+		case "THREE_QUARTER":
+			return <Badge variant="outline">3/4</Badge>;
+		case "FULL":
+			return <Badge variant="success">Full</Badge>;
 		default:
 			return <Badge>{type}</Badge>;
 	}

@@ -112,7 +112,7 @@ export const getLeaderBoardServerFn = createServerFn({ method: "GET" })
 			})
 			.from(murphsTable)
 			.orderBy(murphsTable.duration) // shortest first
-			.where(eq(murphsTable.murphType, "Full Murph"))
+			.where(eq(murphsTable.murphType, "FULL"))
 			.innerJoin(user, eq(murphsTable.userId, user.id))
 			.limit(3);
 
