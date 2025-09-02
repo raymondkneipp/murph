@@ -12,10 +12,10 @@ function RouteComponent() {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<h1 className="font-bold text-3xl">Global Murphs</h1>
+			<h1 className="font-bold text-3xl mb-4">Murphs Feed</h1>
 
 			{murphs?.map((m) => (
-				<MurphItem m={m} />
+				<MurphItem showUser m={m} />
 			))}
 		</div>
 	);

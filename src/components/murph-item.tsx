@@ -3,12 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { format } from "date-fns";
-import {
-	BicepsFlexedIcon,
-	CalendarIcon,
-	TimerIcon,
-	TrashIcon,
-} from "lucide-react";
+import { CalendarIcon, TimerIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { Icon as CustomIcons } from "@/components/icon";
 import {
@@ -62,11 +57,17 @@ function MurphTypeBadge({ type }: { type: Murph["murphType"] }) {
 	}
 }
 
-export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
+export function MurphItem({
+	m,
+	showUser = false,
+}: {
+	m: MurphMaybeWithUser;
+	showUser?: boolean;
+}) {
 	const { data: userData } = useSession();
 	const router = useRouter();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	
+
 	const deleteMurph = useServerFn(deleteMurphServerFn);
 	const { mutate: handleDelete, isPending: isDeleting } = useMutation({
 		mutationFn: () => deleteMurph({ data: { murphId: m.id } }),
@@ -81,7 +82,7 @@ export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger>
 				<Card className="gap-2 p-4 cursor-pointer">
-					{userData?.user.id !== m.user?.id && (
+					{showUser && (
 						<CardHeader className="px-0">
 							<div className="flex items-center gap-2">
 								<Avatar>
@@ -186,7 +187,7 @@ export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 					<TimeSplit
 						name="Exercises"
 						value={formatTimeDifference(m.firstRunEndTime, m.exercisesEndTime)}
-						icon={BicepsFlexedIcon}
+						icon={CustomIcons.Pullup}
 					/>
 
 					<TimeSplit
@@ -229,8 +230,8 @@ export function MurphItem({ m }: { m: MurphMaybeWithUser }) {
 							<AlertDialogHeader>
 								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 								<AlertDialogDescription>
-									This action cannot be undone. This will permanently delete your
-									murph workout from the system.
+									This action cannot be undone. This will permanently delete
+									your murph workout from the system.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>
