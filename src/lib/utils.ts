@@ -13,7 +13,6 @@ export function toMilliseconds(minutes: number, seconds: number = 0): number {
 	return minutes * 60_000 + seconds * 1_000;
 }
 
-// Helper function to format time difference in HH:MM:SS
 export const formatTimeDifference = (
 	startTime: Date,
 	endTime: Date,
@@ -24,7 +23,10 @@ export const formatTimeDifference = (
 	const minutes = Math.floor((diffSeconds % 3600) / 60);
 	const seconds = diffSeconds % 60;
 
-	return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+	const minutesStr =
+		hours > 0 ? minutes.toString().padStart(2, "0") : minutes.toString();
+
+	return `${hours > 0 ? hours.toString().padStart(2, "0") + ":" : ""}${minutesStr}:${seconds.toString().padStart(2, "0")}`;
 };
 
 export function formatNumber(num: number) {
