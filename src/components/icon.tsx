@@ -5,6 +5,7 @@ function Running({ className, ...rest }: React.ComponentProps<"svg">) {
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 512 512"
+			aria-hidden="true"
 			className={cn("size-10", className)}
 			{...rest}
 		>
@@ -21,6 +22,7 @@ function Pullup({ className, ...rest }: React.ComponentProps<"svg">) {
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 512 512"
+			aria-hidden="true"
 			className={cn("size-10", className)}
 			{...rest}
 		>
@@ -37,6 +39,7 @@ function Pushup({ className, ...rest }: React.ComponentProps<"svg">) {
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 512 512"
+			aria-hidden="true"
 			className={cn("size-10", className)}
 			{...rest}
 		>
@@ -53,6 +56,7 @@ function Squat({ className, ...rest }: React.ComponentProps<"svg">) {
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 512 512"
+			aria-hidden="true"
 			className={cn("size-10", className)}
 			{...rest}
 		>

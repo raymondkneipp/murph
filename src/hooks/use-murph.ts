@@ -1,14 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { redirect } from "@tanstack/react-router";
-import { createServerFn, useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import z from "zod";
-import { db } from "@/db";
 import type { NewMurph } from "@/db/schema";
-import { murphsTable } from "@/db/schema";
-import { authMiddleware } from "@/lib/auth-middleware";
 import { clamp, toMilliseconds } from "@/lib/utils";
 import { useStopwatch } from "./use-stopwatch";
+import { addMurphServerFn } from "@/lib/api";
 
 type NullableFields<T, K extends keyof T> = {
 	[P in keyof T]: P extends K ? T[P] | null : T[P];
@@ -52,37 +48,6 @@ const MAX_REPS = {
 	squats: 300,
 } as const;
 
-const addMurph = createServerFn({ method: "POST" })
-	.validator(
-		z.object({
-			startTime: z.date(),
-
-			firstRunDistance: z.number(),
-			firstRunEndTime: z.date(),
-
-			pullups: z.number(),
-			pushups: z.number(),
-			squats: z.number(),
-			exercisesEndTime: z.date(),
-
-			secondRunDistance: z.number(),
-			secondRunEndTime: z.date(),
-		}),
-	)
-	.middleware([authMiddleware])
-	.handler(async ({ data, context }) => {
-		const { user } = context;
-
-		if (!user.id) {
-			throw redirect({ to: "/login" });
-		}
-
-		return db
-			.insert(murphsTable)
-			.values({ ...data, userId: user.id })
-			.returning();
-	});
-
 export function useMurph() {
 	const [murph, setMurph] = useState<MurphState>(INITIAL_MURPH);
 
@@ -95,7 +60,7 @@ export function useMurph() {
 		stop: stopTimer,
 	} = useStopwatch();
 
-	const logMurph = useServerFn(addMurph);
+	const logMurph = useServerFn(addMurphServerFn);
 	const {
 		mutate,
 		isPending: isSaving,

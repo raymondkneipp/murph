@@ -26,7 +26,6 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppMeRouteImport } from './routes/_app/me'
 import { Route as AppFeedRouteImport } from './routes/_app/feed'
-import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
 import { Route as AppMurphNewRouteImport } from './routes/_app/murph/new'
@@ -109,11 +108,6 @@ const AppFeedRoute = AppFeedRouteImport.update({
   path: '/feed',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
-  id: '/start/server-funcs',
-  path: '/start/server-funcs',
-  getParentRoute: () => DemoRouteRoute,
-} as any)
 const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
   id: '/form/simple',
   path: '/form/simple',
@@ -167,7 +161,6 @@ export interface FileRoutesByFullPath {
   '/murph/new': typeof AppMurphNewRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRoutesByTo {
   '/demo': typeof DemoRouteRouteWithChildren
@@ -186,7 +179,6 @@ export interface FileRoutesByTo {
   '/murph/new': typeof AppMurphNewRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -209,7 +201,6 @@ export interface FileRoutesById {
   '/_app/murph/new': typeof AppMurphNewRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,7 +221,6 @@ export interface FileRouteTypes {
     | '/murph/new'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/server-funcs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/demo'
@@ -249,7 +239,6 @@ export interface FileRouteTypes {
     | '/murph/new'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/server-funcs'
   id:
     | '__root__'
     | '/_app'
@@ -271,7 +260,6 @@ export interface FileRouteTypes {
     | '/_app/murph/new'
     | '/demo/form/address'
     | '/demo/form/simple'
-    | '/demo/start/server-funcs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -418,13 +406,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFeedRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/demo/start/server-funcs': {
-      id: '/demo/start/server-funcs'
-      path: '/start/server-funcs'
-      fullPath: '/demo/start/server-funcs'
-      preLoaderRoute: typeof DemoStartServerFuncsRouteImport
-      parentRoute: typeof DemoRouteRoute
-    }
     '/demo/form/simple': {
       id: '/demo/form/simple'
       path: '/form/simple'
@@ -535,7 +516,6 @@ interface DemoRouteRouteChildren {
   DemoTrpcTodoRoute: typeof DemoTrpcTodoRoute
   DemoFormAddressRoute: typeof DemoFormAddressRoute
   DemoFormSimpleRoute: typeof DemoFormSimpleRoute
-  DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
 }
 
 const DemoRouteRouteChildren: DemoRouteRouteChildren = {
@@ -544,7 +524,6 @@ const DemoRouteRouteChildren: DemoRouteRouteChildren = {
   DemoTrpcTodoRoute: DemoTrpcTodoRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
-  DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
 }
 
 const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(

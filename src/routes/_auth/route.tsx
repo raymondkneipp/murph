@@ -1,6 +1,6 @@
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
-import { getUserId } from "@/lib/auth-server-fn";
+import { getUserIdServerFn } from "@/lib/api";
 import {
 	createFileRoute,
 	Link,
@@ -12,7 +12,7 @@ import { ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/_auth")({
 	component: RouteComponent,
 	beforeLoad: async () => {
-		const userId = await getUserId();
+		const userId = await getUserIdServerFn();
 
 		return {
 			userId,

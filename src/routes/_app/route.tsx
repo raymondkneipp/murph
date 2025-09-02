@@ -18,13 +18,12 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
-import { getUserId } from "@/lib/auth-server-fn";
-import { getUserName } from "./me";
+import { getUserIdServerFn, getUserNameServerFn } from "@/lib/api";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,
 	beforeLoad: async () => {
-		const userId = await getUserId();
+		const userId = await getUserIdServerFn();
 
 		return {
 			userId,
@@ -37,7 +36,7 @@ export const Route = createFileRoute("/_app")({
 		}
 
 		return {
-			username: await getUserName(),
+			username: await getUserNameServerFn(),
 		};
 	},
 });

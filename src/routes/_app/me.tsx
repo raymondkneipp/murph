@@ -1,51 +1,20 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { db } from "@/db";
-import { Murph, murphsTable } from "@/db/schema";
+import { createFileRoute } from "@tanstack/react-router";
+import { Murph } from "@/db/schema";
 import { useMemo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BadgeIcon, FlameIcon, HashIcon, TimerIcon } from "lucide-react";
 import { Icon as CustomIcons } from "@/components/icon";
 import { formatNumber, formatTimeDifference } from "@/lib/utils";
-import { desc, eq } from "drizzle-orm";
 import { MurphItem } from "@/components/murph-item";
 import { DemoBadges } from "@/components/demo-badges";
-import { authMiddleware } from "@/lib/auth-middleware";
-
-const getUserMurphs = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async ({ context }) => {
-		const { user } = context;
-
-		if (!user.id) {
-			throw redirect({ to: "/login" });
-		}
-
-		return db
-			.select()
-			.from(murphsTable)
-			.where(eq(murphsTable.userId, user.id))
-			.orderBy(desc(murphsTable.startTime));
-	});
-
-export const getUserName = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async ({ context }) => {
-		const { user } = context;
-
-		if (!user.id) {
-			throw redirect({ to: "/login" });
-		}
-
-		return user.name;
-	});
+import { getUserMurphsServerFn, getUserNameServerFn } from "@/lib/api";
 
 export const Route = createFileRoute("/_app/me")({
 	component: RouteComponent,
 	loader: async () => {
 		return {
-			murphs: await getUserMurphs(),
-			username: await getUserName(),
+			murphs: await getUserMurphsServerFn(),
+			username: await getUserNameServerFn(),
 		};
 	},
 });
