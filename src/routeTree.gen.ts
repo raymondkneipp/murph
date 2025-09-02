@@ -17,7 +17,6 @@ import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
-import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoTableRouteImport } from './routes/demo/table'
 import { Route as MarketingLeaderboardRouteImport } from './routes/_marketing/leaderboard'
@@ -31,7 +30,6 @@ import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
 import { Route as AppMurphNewRouteImport } from './routes/_app/murph/new'
 import { Route as AppMurphMurphIdRouteImport } from './routes/_app/murph/$murphId'
 import { ServerRoute as ApiDemoTqTodosServerRouteImport } from './routes/api/demo-tq-todos'
-import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api/trpc.$'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -62,11 +60,6 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MarketingRouteRoute,
-} as any)
-const DemoTrpcTodoRoute = DemoTrpcTodoRouteImport.update({
-  id: '/trpc-todo',
-  path: '/trpc-todo',
-  getParentRoute: () => DemoRouteRoute,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/tanstack-query',
@@ -133,11 +126,6 @@ const ApiDemoTqTodosServerRoute = ApiDemoTqTodosServerRouteImport.update({
   path: '/api/demo-tq-todos',
   getParentRoute: () => rootServerRouteImport,
 } as any)
-const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -155,7 +143,6 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof MarketingIndexRoute
   '/murph/$murphId': typeof AppMurphMurphIdRoute
   '/murph/new': typeof AppMurphNewRoute
@@ -173,7 +160,6 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof MarketingIndexRoute
   '/murph/$murphId': typeof AppMurphMurphIdRoute
   '/murph/new': typeof AppMurphNewRoute
@@ -195,7 +181,6 @@ export interface FileRoutesById {
   '/_marketing/leaderboard': typeof MarketingLeaderboardRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/_app/murph/$murphId': typeof AppMurphMurphIdRoute
   '/_app/murph/new': typeof AppMurphNewRoute
@@ -215,7 +200,6 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
-    | '/demo/trpc-todo'
     | '/'
     | '/murph/$murphId'
     | '/murph/new'
@@ -233,7 +217,6 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
-    | '/demo/trpc-todo'
     | '/'
     | '/murph/$murphId'
     | '/murph/new'
@@ -254,7 +237,6 @@ export interface FileRouteTypes {
     | '/_marketing/leaderboard'
     | '/demo/table'
     | '/demo/tanstack-query'
-    | '/demo/trpc-todo'
     | '/_marketing/'
     | '/_app/murph/$murphId'
     | '/_app/murph/new'
@@ -272,31 +254,27 @@ export interface RootRouteChildren {
 export interface FileServerRoutesByFullPath {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesByTo {
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/api/demo-tq-todos': typeof ApiDemoTqTodosServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
+  fullPaths: '/api/demo-tq-todos' | '/api/auth/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
-  id: '__root__' | '/api/demo-tq-todos' | '/api/auth/$' | '/api/trpc/$'
+  to: '/api/demo-tq-todos' | '/api/auth/$'
+  id: '__root__' | '/api/demo-tq-todos' | '/api/auth/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   ApiDemoTqTodosServerRoute: typeof ApiDemoTqTodosServerRoute
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
-  ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -342,13 +320,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRouteRoute
-    }
-    '/demo/trpc-todo': {
-      id: '/demo/trpc-todo'
-      path: '/trpc-todo'
-      fullPath: '/demo/trpc-todo'
-      preLoaderRoute: typeof DemoTrpcTodoRouteImport
-      parentRoute: typeof DemoRouteRoute
     }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
@@ -445,13 +416,6 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiDemoTqTodosServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -513,7 +477,6 @@ const MarketingRouteRouteWithChildren = MarketingRouteRoute._addFileChildren(
 interface DemoRouteRouteChildren {
   DemoTableRoute: typeof DemoTableRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  DemoTrpcTodoRoute: typeof DemoTrpcTodoRoute
   DemoFormAddressRoute: typeof DemoFormAddressRoute
   DemoFormSimpleRoute: typeof DemoFormSimpleRoute
 }
@@ -521,7 +484,6 @@ interface DemoRouteRouteChildren {
 const DemoRouteRouteChildren: DemoRouteRouteChildren = {
   DemoTableRoute: DemoTableRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-  DemoTrpcTodoRoute: DemoTrpcTodoRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
 }
@@ -543,7 +505,6 @@ export const routeTree = rootRouteImport
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiDemoTqTodosServerRoute: ApiDemoTqTodosServerRoute,
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
-  ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)
