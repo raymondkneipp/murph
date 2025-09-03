@@ -334,9 +334,7 @@ Do you want me to sketch **database tables/relations** for this structure (users
 # TODO
 - drizzle-zod
 - setup better id rather than auto inc
-- run murph in group or with friend
 - persist murph when refresh or exiting app
-- run murph offline
 - run murph without account
 - user public profile
 - click on murph item to view user
@@ -344,4 +342,3 @@ Do you want me to sketch **database tables/relations** for this structure (users
 - search for users
 - invite users
 - badges
-- profile picture
