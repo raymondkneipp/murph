@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BadgeIcon, FlameIcon, HashIcon, TimerIcon } from "lucide-react";
+import { FlameIcon, HashIcon, HourglassIcon, TimerIcon } from "lucide-react";
 import { Icon as CustomIcons } from "@/components/icon";
 import { formatNumber, murphMetrics } from "@/lib/utils";
 import { MurphItem } from "@/components/murph-item";
@@ -57,6 +57,7 @@ function RouteComponent() {
 		totalMurphs,
 		fastestMurph,
 		longestStreak,
+		averageMurph,
 	} = useMemo(() => murphMetrics(murphs ?? []), [murphs]);
 
 	const schema = z.object({
@@ -193,18 +194,18 @@ function RouteComponent() {
 				</div>
 
 				<div className="flex items-center gap-3">
-					<BadgeIcon className="size-8" />
-					<div className="flex flex-col">
-						<p className="font-bold">?? / ??</p>
-						<h3 className="text-xs">Badges Unlocked</h3>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-3">
 					<TimerIcon className="size-8" />
 					<div className="flex flex-col">
 						<p className="font-bold">{fastestMurph ?? "N/A"}</p>
 						<h3 className="text-xs">Fastest Time</h3>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3">
+					<HourglassIcon className="size-8" />
+					<div className="flex flex-col">
+						<p className="font-bold">{averageMurph ?? "N/A"}</p>
+						<h3 className="text-xs">Average Time</h3>
 					</div>
 				</div>
 

@@ -52,6 +52,17 @@ export function murphMetrics(murphs: Murph[]) {
 			})
 		: null;
 
+	// --- average murph time (only full murphs) ---
+	const averageMurphMs =
+		fullMurphs.length > 0
+			? fullMurphs.reduce((total, m) => {
+					const duration =
+						new Date(m.secondRunEndTime).getTime() -
+						new Date(m.startTime).getTime();
+					return total + duration;
+				}, 0) / fullMurphs.length
+			: null;
+
 	// --- longest streak (only full murphs) ---
 	const sortedFullMurphs = [...fullMurphs].sort(
 		(a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
@@ -116,6 +127,9 @@ export function murphMetrics(murphs: Murph[]) {
 					new Date(fastestMurph.startTime),
 					new Date(fastestMurph.secondRunEndTime),
 				)
+			: null,
+		averageMurph: averageMurphMs
+			? formatTimeDifference(new Date(0), new Date(averageMurphMs))
 			: null,
 		longestStreak,
 	};
