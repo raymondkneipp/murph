@@ -14,6 +14,23 @@ const schema = z.object({
 	password: z.string().min(1, "Password is required"),
 });
 
+async function generateUsername(name: string, email: string): Promise<string> {
+	// normalize base
+	const base = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+	// hash email → get first 4 chars
+	const encoder = new TextEncoder();
+	const data = encoder.encode(email);
+	const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+	const hashArray = Array.from(new Uint8Array(hashBuffer));
+	const hashHex = hashArray
+		.map((b) => b.toString(16).padStart(2, "0"))
+		.join("");
+	const shortHash = hashHex.slice(0, 4);
+
+	return `${base}_${shortHash}`;
+}
+
 function RouteComponent() {
 	const router = useRouter();
 
@@ -27,9 +44,13 @@ function RouteComponent() {
 			onChange: schema,
 		},
 		onSubmit: async ({ value }) => {
-			await signUp.email(value, {
-				onSuccess: () => router.navigate({ to: "/feed" }),
-			});
+			const username = await generateUsername(value.name, value.email);
+			await signUp.email(
+				{ ...value, username },
+				{
+					onSuccess: () => router.navigate({ to: "/feed" }),
+				},
+			);
 		},
 	});
 

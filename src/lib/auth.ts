@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { username } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { reactStartCookies } from "better-auth/react-start";
 import { db } from "@/db";
@@ -12,5 +13,8 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
-	plugins: [reactStartCookies()], // make sure this is the last plugin in the array
+	plugins: [
+		username(),
+		reactStartCookies(), // make sure this is the last plugin in the array
+	],
 });

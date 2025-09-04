@@ -12,22 +12,18 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UsernameRouteImport } from './routes/$username'
-import { Route as DemoRouteRouteImport } from './routes/demo/route'
+import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
-import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
-import { Route as DemoTableRouteImport } from './routes/demo/table'
+import { Route as AppSettingsRouteImport } from './routes/app/settings'
+import { Route as AppNewRouteImport } from './routes/app/new'
+import { Route as AppMeRouteImport } from './routes/app/me'
+import { Route as AppLeaderboardRouteImport } from './routes/app/leaderboard'
+import { Route as AppFeedRouteImport } from './routes/app/feed'
 import { Route as MarketingLeaderboardRouteImport } from './routes/_marketing/leaderboard'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AppSettingsRouteImport } from './routes/_app/settings'
-import { Route as AppMeRouteImport } from './routes/_app/me'
-import { Route as AppFeedRouteImport } from './routes/_app/feed'
-import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
-import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
-import { Route as AppMurphNewRouteImport } from './routes/_app/murph/new'
-import { Route as AppMurphMurphIdRouteImport } from './routes/_app/murph/$murphId'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -37,9 +33,9 @@ const UsernameRoute = UsernameRouteImport.update({
   path: '/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoRouteRoute = DemoRouteRouteImport.update({
-  id: '/demo',
-  path: '/demo',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketingRouteRoute = MarketingRouteRouteImport.update({
@@ -50,19 +46,35 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MarketingIndexRoute = MarketingIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MarketingRouteRoute,
 } as any)
-const DemoTableRoute = DemoTableRouteImport.update({
-  id: '/table',
-  path: '/table',
-  getParentRoute: () => DemoRouteRoute,
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppNewRoute = AppNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppMeRoute = AppMeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppFeedRoute = AppFeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const MarketingLeaderboardRoute = MarketingLeaderboardRouteImport.update({
   id: '/leaderboard',
@@ -79,41 +91,6 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppMeRoute = AppMeRouteImport.update({
-  id: '/me',
-  path: '/me',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppFeedRoute = AppFeedRouteImport.update({
-  id: '/feed',
-  path: '/feed',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
-  id: '/form/simple',
-  path: '/form/simple',
-  getParentRoute: () => DemoRouteRoute,
-} as any)
-const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
-  id: '/form/address',
-  path: '/form/address',
-  getParentRoute: () => DemoRouteRoute,
-} as any)
-const AppMurphNewRoute = AppMurphNewRouteImport.update({
-  id: '/murph/new',
-  path: '/murph/new',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppMurphMurphIdRoute = AppMurphMurphIdRouteImport.update({
-  id: '/murph/$murphId',
-  path: '/murph/$murphId',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -121,116 +98,95 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/demo': typeof DemoRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/feed': typeof AppFeedRoute
-  '/me': typeof AppMeRoute
-  '/settings': typeof AppSettingsRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/leaderboard': typeof MarketingLeaderboardRoute
-  '/demo/table': typeof DemoTableRoute
+  '/app/feed': typeof AppFeedRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/me': typeof AppMeRoute
+  '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/': typeof MarketingIndexRoute
-  '/murph/$murphId': typeof AppMurphMurphIdRoute
-  '/murph/new': typeof AppMurphNewRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
 }
 export interface FileRoutesByTo {
-  '/demo': typeof DemoRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/feed': typeof AppFeedRoute
-  '/me': typeof AppMeRoute
-  '/settings': typeof AppSettingsRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/leaderboard': typeof MarketingLeaderboardRoute
-  '/demo/table': typeof DemoTableRoute
+  '/app/feed': typeof AppFeedRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/me': typeof AppMeRoute
+  '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/': typeof MarketingIndexRoute
-  '/murph/$murphId': typeof AppMurphMurphIdRoute
-  '/murph/new': typeof AppMurphNewRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_marketing': typeof MarketingRouteRouteWithChildren
-  '/demo': typeof DemoRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
   '/$username': typeof UsernameRoute
-  '/_app/feed': typeof AppFeedRoute
-  '/_app/me': typeof AppMeRoute
-  '/_app/settings': typeof AppSettingsRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_marketing/leaderboard': typeof MarketingLeaderboardRoute
-  '/demo/table': typeof DemoTableRoute
+  '/app/feed': typeof AppFeedRoute
+  '/app/leaderboard': typeof AppLeaderboardRoute
+  '/app/me': typeof AppMeRoute
+  '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/_marketing/': typeof MarketingIndexRoute
-  '/_app/murph/$murphId': typeof AppMurphMurphIdRoute
-  '/_app/murph/new': typeof AppMurphNewRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/demo'
+    | '/app'
     | '/$username'
-    | '/feed'
-    | '/me'
-    | '/settings'
     | '/login'
     | '/signup'
     | '/leaderboard'
-    | '/demo/table'
+    | '/app/feed'
+    | '/app/leaderboard'
+    | '/app/me'
+    | '/app/new'
+    | '/app/settings'
     | '/'
-    | '/murph/$murphId'
-    | '/murph/new'
-    | '/demo/form/address'
-    | '/demo/form/simple'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/demo'
+    | '/app'
     | '/$username'
-    | '/feed'
-    | '/me'
-    | '/settings'
     | '/login'
     | '/signup'
     | '/leaderboard'
-    | '/demo/table'
+    | '/app/feed'
+    | '/app/leaderboard'
+    | '/app/me'
+    | '/app/new'
+    | '/app/settings'
     | '/'
-    | '/murph/$murphId'
-    | '/murph/new'
-    | '/demo/form/address'
-    | '/demo/form/simple'
   id:
     | '__root__'
-    | '/_app'
     | '/_auth'
     | '/_marketing'
-    | '/demo'
+    | '/app'
     | '/$username'
-    | '/_app/feed'
-    | '/_app/me'
-    | '/_app/settings'
     | '/_auth/login'
     | '/_auth/signup'
     | '/_marketing/leaderboard'
-    | '/demo/table'
+    | '/app/feed'
+    | '/app/leaderboard'
+    | '/app/me'
+    | '/app/new'
+    | '/app/settings'
     | '/_marketing/'
-    | '/_app/murph/$murphId'
-    | '/_app/murph/new'
-    | '/demo/form/address'
-    | '/demo/form/simple'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   MarketingRouteRoute: typeof MarketingRouteRouteWithChildren
-  DemoRouteRoute: typeof DemoRouteRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   UsernameRoute: typeof UsernameRoute
 }
 export interface FileServerRoutesByFullPath {
@@ -264,11 +220,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_marketing': {
@@ -285,13 +241,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_marketing/': {
       id: '/_marketing/'
       path: '/'
@@ -299,12 +248,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRouteRoute
     }
-    '/demo/table': {
-      id: '/demo/table'
-      path: '/table'
-      fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
-      parentRoute: typeof DemoRouteRoute
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/new': {
+      id: '/app/new'
+      path: '/new'
+      fullPath: '/app/new'
+      preLoaderRoute: typeof AppNewRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/me': {
+      id: '/app/me'
+      path: '/me'
+      fullPath: '/app/me'
+      preLoaderRoute: typeof AppMeRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/leaderboard': {
+      id: '/app/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/app/leaderboard'
+      preLoaderRoute: typeof AppLeaderboardRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/feed': {
+      id: '/app/feed'
+      path: '/feed'
+      fullPath: '/app/feed'
+      preLoaderRoute: typeof AppFeedRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/_marketing/leaderboard': {
       id: '/_marketing/leaderboard'
@@ -327,55 +304,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/me': {
-      id: '/_app/me'
-      path: '/me'
-      fullPath: '/me'
-      preLoaderRoute: typeof AppMeRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/feed': {
-      id: '/_app/feed'
-      path: '/feed'
-      fullPath: '/feed'
-      preLoaderRoute: typeof AppFeedRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/demo/form/simple': {
-      id: '/demo/form/simple'
-      path: '/form/simple'
-      fullPath: '/demo/form/simple'
-      preLoaderRoute: typeof DemoFormSimpleRouteImport
-      parentRoute: typeof DemoRouteRoute
-    }
-    '/demo/form/address': {
-      id: '/demo/form/address'
-      path: '/form/address'
-      fullPath: '/demo/form/address'
-      preLoaderRoute: typeof DemoFormAddressRouteImport
-      parentRoute: typeof DemoRouteRoute
-    }
-    '/_app/murph/new': {
-      id: '/_app/murph/new'
-      path: '/murph/new'
-      fullPath: '/murph/new'
-      preLoaderRoute: typeof AppMurphNewRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/murph/$murphId': {
-      id: '/_app/murph/$murphId'
-      path: '/murph/$murphId'
-      fullPath: '/murph/$murphId'
-      preLoaderRoute: typeof AppMurphMurphIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -389,26 +317,6 @@ declare module '@tanstack/react-start/server' {
     }
   }
 }
-
-interface AppRouteRouteChildren {
-  AppFeedRoute: typeof AppFeedRoute
-  AppMeRoute: typeof AppMeRoute
-  AppSettingsRoute: typeof AppSettingsRoute
-  AppMurphMurphIdRoute: typeof AppMurphMurphIdRoute
-  AppMurphNewRoute: typeof AppMurphNewRoute
-}
-
-const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppFeedRoute: AppFeedRoute,
-  AppMeRoute: AppMeRoute,
-  AppSettingsRoute: AppSettingsRoute,
-  AppMurphMurphIdRoute: AppMurphMurphIdRoute,
-  AppMurphNewRoute: AppMurphNewRoute,
-}
-
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
-)
 
 interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
@@ -438,27 +346,30 @@ const MarketingRouteRouteWithChildren = MarketingRouteRoute._addFileChildren(
   MarketingRouteRouteChildren,
 )
 
-interface DemoRouteRouteChildren {
-  DemoTableRoute: typeof DemoTableRoute
-  DemoFormAddressRoute: typeof DemoFormAddressRoute
-  DemoFormSimpleRoute: typeof DemoFormSimpleRoute
+interface AppRouteRouteChildren {
+  AppFeedRoute: typeof AppFeedRoute
+  AppLeaderboardRoute: typeof AppLeaderboardRoute
+  AppMeRoute: typeof AppMeRoute
+  AppNewRoute: typeof AppNewRoute
+  AppSettingsRoute: typeof AppSettingsRoute
 }
 
-const DemoRouteRouteChildren: DemoRouteRouteChildren = {
-  DemoTableRoute: DemoTableRoute,
-  DemoFormAddressRoute: DemoFormAddressRoute,
-  DemoFormSimpleRoute: DemoFormSimpleRoute,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppFeedRoute: AppFeedRoute,
+  AppLeaderboardRoute: AppLeaderboardRoute,
+  AppMeRoute: AppMeRoute,
+  AppNewRoute: AppNewRoute,
+  AppSettingsRoute: AppSettingsRoute,
 }
 
-const DemoRouteRouteWithChildren = DemoRouteRoute._addFileChildren(
-  DemoRouteRouteChildren,
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   MarketingRouteRoute: MarketingRouteRouteWithChildren,
-  DemoRouteRoute: DemoRouteRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
   UsernameRoute: UsernameRoute,
 }
 export const routeTree = rootRouteImport

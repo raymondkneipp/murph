@@ -32,7 +32,7 @@ import { SegmentedProgress } from "@/components/ui/segmented-progress";
 import { useMurph } from "@/hooks/use-murph";
 import { cn, formatTimeDifference } from "@/lib/utils";
 
-export const Route = createFileRoute("/_app/murph/new")({
+export const Route = createFileRoute("/app/new")({
 	component: RouteComponent,
 });
 
@@ -54,7 +54,7 @@ function RouteComponent() {
 		const repValues = COMMON_FACTORS.map((factor) => maxReps / factor);
 		const startIndex = currentRepPage * 3;
 		return repValues.slice(startIndex, startIndex + 3);
-	};
+	}
 
 	const handleRepPageChange = (direction: "left" | "right") => {
 		if (direction === "left" && canGoLeft) {
@@ -62,7 +62,7 @@ function RouteComponent() {
 		} else if (direction === "right" && canGoRight) {
 			setCurrentRepPage((prev) => prev + 1);
 		}
-	};
+	}
 
 	// Main component logic
 	const {
@@ -89,7 +89,7 @@ function RouteComponent() {
 		const elapsed = Date.now() - (murphState.startTime?.getTime() || 0);
 		const requiredTime = (minutes * 60 + (seconds || 0)) * 1000;
 		return elapsed < requiredTime;
-	};
+	}
 
 	// Helper function to check if enough time has passed for second run
 	const isBeforeSecondRun = (minutes: number, seconds?: number) => {
@@ -97,7 +97,7 @@ function RouteComponent() {
 		const elapsed = Date.now() - murphState.exercisesEndTime.getTime();
 		const requiredTime = (minutes * 60 + (seconds || 0)) * 1000;
 		return elapsed < requiredTime;
-	};
+	}
 
 	// Constants for run distances with time requirements
 	// Time requirements are the same for both runs, but calculated from different start times
@@ -159,7 +159,7 @@ function RouteComponent() {
 				</AlertDialogContent>
 			</AlertDialog>
 		</div>
-	);
+	)
 
 	/**
 	 * Renders an exercise section with progress bars and rep buttons
@@ -199,8 +199,8 @@ function RouteComponent() {
 					))}
 				</div>
 			</div>
-		);
-	};
+		)
+	}
 
 	/**
 	 * Renders navigation controls for paginating through rep values
@@ -240,7 +240,7 @@ function RouteComponent() {
 				<PlusIcon className="size-4" />
 			</Button>
 		</div>
-	);
+	)
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -421,5 +421,5 @@ function RouteComponent() {
 				</AlertDialog>
 			)}
 		</div>
-	);
+	)
 }

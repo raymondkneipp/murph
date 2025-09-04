@@ -13,14 +13,13 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
 import { getUserServerFn } from "@/lib/api";
 
-export const Route = createFileRoute("/_app")({
+export const Route = createFileRoute("/app")({
 	component: RouteComponent,
 	beforeLoad: async () => {
 		const user = await getUserServerFn();
@@ -51,13 +50,14 @@ function RouteComponent() {
 				<Brand />
 				<nav className="flex items-center">
 					<Button asChild variant="ghost">
-						<Link to="/feed">Home</Link>
+						<Link to="/app/feed">Home</Link>
+					</Button>
+
+					<Button asChild variant="ghost">
+						<Link to="/app/new">Start Murph</Link>
 					</Button>
 					<Button asChild variant="ghost">
-						<Link to="/murph/new">New Murph</Link>
-					</Button>
-					<Button asChild variant="ghost">
-						<Link to="/leaderboard">Leaderboard</Link>
+						<Link to="/app/leaderboard">Leaderboard</Link>
 					</Button>
 
 					<DropdownMenu>
@@ -72,13 +72,11 @@ function RouteComponent() {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
-							<DropdownMenuLabel>My Account</DropdownMenuLabel>
-							<DropdownMenuSeparator />
 							<DropdownMenuItem asChild>
-								<Link to="/me">Profile</Link>
+								<Link to="/app/me">My Profile</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem asChild>
-								<Link to="/settings">Settings</Link>
+								<Link to="/app/settings">Settings</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem

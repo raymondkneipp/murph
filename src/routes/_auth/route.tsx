@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_auth")({
 
 	loader: async ({ context }) => {
 		if (context.user.id) {
-			throw redirect({ to: "/feed" });
+			throw redirect({ to: "/app/feed" });
 		}
 	},
 });

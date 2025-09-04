@@ -1,14 +1,10 @@
 import { Leaderboard } from "@/components/leaderboard";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_marketing/leaderboard")({
+export const Route = createFileRoute("/app/leaderboard")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<div className="container py-8">
-			<Leaderboard />
-		</div>
-	);
+	return <Leaderboard />;
 }

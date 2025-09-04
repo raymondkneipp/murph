@@ -27,7 +27,7 @@ type MurphState = Omit<
 	"userId" | "murphType"
 >;
 
-const INITIAL_MURPH: MurphState = {
+const INITIAL_MURPH: Omit<MurphState, "duration"> = {
 	startTime: null,
 
 	firstRunDistance: 0,
@@ -49,7 +49,8 @@ const MAX_REPS = {
 } as const;
 
 export function useMurph() {
-	const [murph, setMurph] = useState<MurphState>(INITIAL_MURPH);
+	const [murph, setMurph] =
+		useState<Omit<MurphState, "duration">>(INITIAL_MURPH);
 
 	const {
 		elapsed,

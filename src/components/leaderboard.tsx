@@ -21,7 +21,7 @@ export function Leaderboard() {
 	});
 
 	return (
-		<section className="container py-8 flex flex-col gap-4">
+		<section className="flex flex-col gap-4">
 			<h1 className="font-bold text-3xl">Leaderboard</h1>
 			<Popover>
 				<PopoverTrigger asChild>
