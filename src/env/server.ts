@@ -6,7 +6,6 @@ export const env = createEnv({
 		TURSO_DATABASE_URL: z.url(),
 		TURSO_AUTH_TOKEN: z.string(),
 		BETTER_AUTH_SECRET: z.string(),
-		BETTER_AUTH_URL: z.url(),
 
 		S3_ACCESS_KEY: z.string(),
 		S3_SECRET_KEY: z.string(),

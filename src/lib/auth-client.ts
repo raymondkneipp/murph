@@ -1,5 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 import { usernameClient } from "better-auth/client/plugins";
+import { env } from "@/env/client";
 
 export const {
 	useSession,
@@ -10,7 +11,7 @@ export const {
 	isUsernameAvailable,
 	updateUser,
 } = createAuthClient({
-	baseURL: "http://localhost:3000",
+	baseURL: env.VITE_BETTER_AUTH_URL,
 	// redirectTo: "/feed",
 	plugins: [usernameClient()],
 });
