@@ -7,6 +7,34 @@ import { authMiddleware } from "@/lib/auth-middleware";
 import z from "zod";
 import sharp from "sharp";
 
+export const getUserFromUsernameServerFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator(z.string())
+	.handler(async ({ context, data: username }) => {
+		const { user } = context;
+
+		if (!user.id) {
+			throw redirect({ to: "/login" });
+		}
+
+		const targetUser = await db.query.user.findFirst({
+			where: eq(userTable.username, username),
+			with: {
+				murphs: {
+					with: {
+						user: true,
+					},
+				},
+			},
+		});
+
+		if (!targetUser) {
+			throw notFound();
+		}
+
+		return targetUser;
+	});
+
 export const getUserMurphsServerFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
@@ -23,6 +51,7 @@ export const getUserMurphsServerFn = createServerFn({ method: "GET" })
 					columns: {
 						id: true,
 						name: true,
+						username: true,
 						image: true,
 					},
 				},
@@ -39,6 +68,7 @@ export const getAllMurphsServerFn = createServerFn({ method: "GET" }).handler(
 					columns: {
 						id: true,
 						name: true,
+						username: true,
 						image: true,
 					},
 				},
@@ -144,6 +174,7 @@ export const getLeaderBoardServerFn = createServerFn({ method: "GET" })
 					columns: {
 						id: true,
 						name: true,
+						username: true,
 						image: true,
 					},
 				},

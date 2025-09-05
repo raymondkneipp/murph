@@ -11,7 +11,6 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UsernameRouteImport } from './routes/$username'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as MarketingRouteRouteImport } from './routes/_marketing/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
@@ -24,15 +23,11 @@ import { Route as AppFeedRouteImport } from './routes/app/feed'
 import { Route as MarketingLeaderboardRouteImport } from './routes/_marketing/leaderboard'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AppUUsernameRouteImport } from './routes/app/u/$username'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
 
-const UsernameRoute = UsernameRouteImport.update({
-  id: '/$username',
-  path: '/$username',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
   path: '/app',
@@ -91,6 +86,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppUUsernameRoute = AppUUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -99,7 +99,6 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
-  '/$username': typeof UsernameRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/leaderboard': typeof MarketingLeaderboardRoute
@@ -109,10 +108,10 @@ export interface FileRoutesByFullPath {
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
   '/': typeof MarketingIndexRoute
+  '/app/u/$username': typeof AppUUsernameRoute
 }
 export interface FileRoutesByTo {
   '/app': typeof AppRouteRouteWithChildren
-  '/$username': typeof UsernameRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/leaderboard': typeof MarketingLeaderboardRoute
@@ -122,13 +121,13 @@ export interface FileRoutesByTo {
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
   '/': typeof MarketingIndexRoute
+  '/app/u/$username': typeof AppUUsernameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_marketing': typeof MarketingRouteRouteWithChildren
   '/app': typeof AppRouteRouteWithChildren
-  '/$username': typeof UsernameRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_marketing/leaderboard': typeof MarketingLeaderboardRoute
@@ -138,12 +137,12 @@ export interface FileRoutesById {
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
   '/_marketing/': typeof MarketingIndexRoute
+  '/app/u/$username': typeof AppUUsernameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/app'
-    | '/$username'
     | '/login'
     | '/signup'
     | '/leaderboard'
@@ -153,10 +152,10 @@ export interface FileRouteTypes {
     | '/app/new'
     | '/app/settings'
     | '/'
+    | '/app/u/$username'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/app'
-    | '/$username'
     | '/login'
     | '/signup'
     | '/leaderboard'
@@ -166,12 +165,12 @@ export interface FileRouteTypes {
     | '/app/new'
     | '/app/settings'
     | '/'
+    | '/app/u/$username'
   id:
     | '__root__'
     | '/_auth'
     | '/_marketing'
     | '/app'
-    | '/$username'
     | '/_auth/login'
     | '/_auth/signup'
     | '/_marketing/leaderboard'
@@ -181,13 +180,13 @@ export interface FileRouteTypes {
     | '/app/new'
     | '/app/settings'
     | '/_marketing/'
+    | '/app/u/$username'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   MarketingRouteRoute: typeof MarketingRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRouteWithChildren
-  UsernameRoute: typeof UsernameRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
@@ -213,13 +212,6 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$username': {
-      id: '/$username'
-      path: '/$username'
-      fullPath: '/$username'
-      preLoaderRoute: typeof UsernameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -304,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/app/u/$username': {
+      id: '/app/u/$username'
+      path: '/u/$username'
+      fullPath: '/app/u/$username'
+      preLoaderRoute: typeof AppUUsernameRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -352,6 +351,7 @@ interface AppRouteRouteChildren {
   AppMeRoute: typeof AppMeRoute
   AppNewRoute: typeof AppNewRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppUUsernameRoute: typeof AppUUsernameRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -360,6 +360,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppMeRoute: AppMeRoute,
   AppNewRoute: AppNewRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppUUsernameRoute: AppUUsernameRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
@@ -370,7 +371,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   MarketingRouteRoute: MarketingRouteRouteWithChildren,
   AppRouteRoute: AppRouteRouteWithChildren,
-  UsernameRoute: UsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

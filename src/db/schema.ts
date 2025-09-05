@@ -69,10 +69,13 @@ export const murphsTable = sqliteTable("murphs_table", {
 export type NewMurph = Omit<typeof murphsTable.$inferSelect, "id">;
 export type Murph = typeof murphsTable.$inferSelect;
 export type MurphWithUser = Murph & {
-	user: Pick<typeof user.$inferSelect, "id" | "name" | "image">;
+	user: Pick<typeof user.$inferSelect, "id" | "name" | "image" | "username">;
 };
 export type MurphMaybeWithUser = Murph & {
-	user: Pick<typeof user.$inferSelect, "id" | "name" | "image"> | null;
+	user: Pick<
+		typeof user.$inferSelect,
+		"id" | "name" | "image" | "username"
+	> | null;
 };
 
 // Auth

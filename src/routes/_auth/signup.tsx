@@ -3,6 +3,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 import { useAppForm } from "../../hooks/demo.form";
 import { signUp } from "@/lib/auth-client";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_auth/signup")({
 	component: RouteComponent,
@@ -34,6 +35,8 @@ async function generateUsername(name: string, email: string): Promise<string> {
 function RouteComponent() {
 	const router = useRouter();
 
+	const [error, setError] = useState<string | null>(null);
+
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
@@ -49,6 +52,7 @@ function RouteComponent() {
 				{ ...value, username },
 				{
 					onSuccess: () => router.navigate({ to: "/app/feed" }),
+					onError: (err) => setError(err.error.message),
 				},
 			);
 		},
@@ -79,6 +83,8 @@ function RouteComponent() {
 				<form.AppField name="password">
 					{(field) => <field.TextField label="Password" type="password" />}
 				</form.AppField>
+
+				{error && <p className="text-destructive">{error}</p>}
 
 				<form.AppForm>
 					<form.SubscribeButton label="Submit" />

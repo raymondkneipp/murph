@@ -1,6 +1,6 @@
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { format } from "date-fns";
 import { CalendarIcon, TimerIcon, TrashIcon } from "lucide-react";
@@ -85,15 +85,24 @@ export function MurphItem({
 				<Card className={cn("gap-4 p-4 cursor-pointer")}>
 					{showUser && (
 						<CardHeader className="px-0">
-							<div className="flex items-center gap-2">
+							<Link
+								to="/app/u/$username"
+								params={{ username: m.user?.username ?? "" }}
+								className="flex items-center gap-2"
+							>
 								<Avatar>
 									<AvatarImage src={m.user?.image ?? ""} />
 									<AvatarFallback>{m.user?.name.charAt(0)}</AvatarFallback>
 								</Avatar>
-								<CardTitle>{m.user?.name}</CardTitle>
-							</div>
+								<CardTitle className="flex flex-col items-start">
+									{m.user?.name}
+									<span className="font-normal text-xs">
+										@{m.user?.username}
+									</span>
+								</CardTitle>
+							</Link>
 							<CardAction>
-								<MurphTypeBadge type={m.murphType} />
+								<Pie value={m.murphType ?? "INCOMPLETE"} />
 							</CardAction>
 						</CardHeader>
 					)}
