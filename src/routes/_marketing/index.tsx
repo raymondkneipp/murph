@@ -37,7 +37,7 @@ function App() {
 
 					<div className="flex flex-wrap items-center justify-center gap-4">
 						<Button asChild size="lg">
-							<Link to="/">
+							<Link to="/login">
 								<PlayIcon />
 								Start Your Murph
 							</Link>
@@ -232,7 +232,7 @@ function App() {
 
 					<div className="flex flex-wrap items-center justify-center gap-4 mt-4">
 						<Button asChild size="lg">
-							<Link to="/">
+							<Link to="/login">
 								<PlayIcon />
 								Start Your Murph
 							</Link>
