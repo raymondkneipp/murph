@@ -54,7 +54,7 @@ export function Leaderboard() {
 			)}
 
 			{boardQuery.data?.topTen.map((m) => (
-				<MurphItem m={m} key={m.id} />
+				<MurphItem m={m} key={m.id} showUser />
 			))}
 		</section>
 	);

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export function useStopwatch() {
+export function useStopwatch(startTime?: Date | null) {
 	const [elapsed, setElapsed] = useState(0); // milliseconds
 	const [isRunning, setIsRunning] = useState(false);
 
@@ -8,25 +8,47 @@ export function useStopwatch() {
 	const rafRef = useRef<number | null>(null);
 
 	// tick function updates elapsed every frame
-	const tick = () => {
+	const tick = useCallback(() => {
 		if (startTimeRef.current !== null) {
 			setElapsed(Date.now() - startTimeRef.current);
 			rafRef.current = requestAnimationFrame(tick);
 		}
-	};
+	}, []);
+
+	// Initialize with past start time if provided (for page reloads)
+	useEffect(() => {
+		if (startTime && !isRunning && startTimeRef.current === null) {
+			const pastStartTime = startTime.getTime();
+			const now = Date.now();
+			const calculatedElapsed = now - pastStartTime;
+			
+			if (calculatedElapsed > 0) {
+				setElapsed(calculatedElapsed);
+				startTimeRef.current = pastStartTime;
+				setIsRunning(true);
+			}
+		}
+	}, [startTime, isRunning]);
+
+	// Handle animation loop when running state changes
+	useEffect(() => {
+		if (isRunning && startTimeRef.current !== null) {
+			rafRef.current = requestAnimationFrame(tick);
+		} else if (rafRef.current) {
+			cancelAnimationFrame(rafRef.current);
+			rafRef.current = null;
+		}
+	}, [isRunning, tick]);
 
 	const start = () => {
 		if (!isRunning) {
-			setIsRunning(true);
 			startTimeRef.current = Date.now() - elapsed; // resume support
-			rafRef.current = requestAnimationFrame(tick);
+			setIsRunning(true);
 		}
 	};
 
 	const stop = () => {
 		setIsRunning(false);
-		if (rafRef.current) cancelAnimationFrame(rafRef.current);
-		rafRef.current = null;
 	};
 
 	const reset = () => {

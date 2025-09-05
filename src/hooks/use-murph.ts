@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import type { NewMurph } from "@/db/schema";
-import { clamp, toMilliseconds } from "@/lib/utils";
-import { useStopwatch } from "./use-stopwatch";
 import { addMurphServerFn } from "@/lib/api";
+import { clamp, toMilliseconds } from "@/lib/utils";
+import { useLocalStorage } from "./use-local-storage";
+import { useStopwatch } from "./use-stopwatch";
 
 type NullableFields<T, K extends keyof T> = {
 	[P in keyof T]: P extends K ? T[P] | null : T[P];
@@ -24,10 +25,10 @@ type MurphState = Omit<
 		NewMurph,
 		"startTime" | "firstRunEndTime" | "exercisesEndTime" | "secondRunEndTime"
 	>,
-	"userId" | "murphType"
+	"userId" | "murphType" | "duration"
 >;
 
-const INITIAL_MURPH: Omit<MurphState, "duration"> = {
+const INITIAL_MURPH: MurphState = {
 	startTime: null,
 
 	firstRunDistance: 0,
@@ -48,18 +49,110 @@ const MAX_REPS = {
 	squats: 300,
 } as const;
 
+// Type for raw data from localStorage (dates are strings)
+type RawMurphState = Omit<MurphState, "startTime" | "firstRunEndTime" | "exercisesEndTime" | "secondRunEndTime"> & {
+	startTime: string | null;
+	firstRunEndTime: string | null;
+	exercisesEndTime: string | null;
+	secondRunEndTime: string | null;
+};
+
+// Helper function to deserialize dates from localStorage
+function deserializeMurphState(data: RawMurphState | null): MurphState {
+	if (!data) return INITIAL_MURPH;
+	
+	return {
+		...data,
+		startTime: data.startTime ? new Date(data.startTime) : null,
+		firstRunEndTime: data.firstRunEndTime ? new Date(data.firstRunEndTime) : null,
+		exercisesEndTime: data.exercisesEndTime ? new Date(data.exercisesEndTime) : null,
+		secondRunEndTime: data.secondRunEndTime ? new Date(data.secondRunEndTime) : null,
+	};
+}
+
+// Helper function to serialize dates for localStorage
+function serializeMurphState(data: MurphState): RawMurphState {
+	return {
+		...data,
+		startTime: data.startTime ? data.startTime.toISOString() : null,
+		firstRunEndTime: data.firstRunEndTime ? data.firstRunEndTime.toISOString() : null,
+		exercisesEndTime: data.exercisesEndTime ? data.exercisesEndTime.toISOString() : null,
+		secondRunEndTime: data.secondRunEndTime ? data.secondRunEndTime.toISOString() : null,
+	};
+}
+
+// Helper function to format time (same as in useStopwatch)
+function formatTime(milliseconds: number): string {
+	const hours = Math.floor(milliseconds / 3600000)
+		.toString()
+		.padStart(2, "0");
+	const minutes = Math.floor((milliseconds % 3600000) / 60000)
+		.toString()
+		.padStart(2, "0");
+	const seconds = Math.floor((milliseconds % 60000) / 1000)
+		.toString()
+		.padStart(2, "0");
+	const ms = (milliseconds % 1000).toString().padStart(3, "0");
+	return `${hours}:${minutes}:${seconds}.${ms}`;
+}
+
 export function useMurph() {
-	const [murph, setMurph] =
-		useState<Omit<MurphState, "duration">>(INITIAL_MURPH);
+	const [rawMurph, setRawMurph] = useLocalStorage<RawMurphState | null>(
+		"murph-state",
+		null
+	);
+	
+	// Track if murph has been saved to prevent duplicates
+	const [hasBeenSaved, setHasBeenSaved] = useLocalStorage<boolean>(
+		"murph-saved",
+		false
+	);
+	
+	// Deserialize dates on every render
+	const murph = useMemo(() => deserializeMurphState(rawMurph), [rawMurph]);
+	
+	const setMurph = useCallback((value: MurphState | ((prev: MurphState) => MurphState)) => {
+		const newValue = typeof value === 'function' ? value(murph) : value;
+		setRawMurph(serializeMurphState(newValue));
+	}, [murph, setRawMurph]);
+
+	// Calculate current stage early so we can use it in stopwatch
+	const currentStage = useMemo((): MurphStage => {
+		if (murph.startTime === null) return "not_started";
+		if (murph.firstRunEndTime === null) return "first_run";
+		if (murph.exercisesEndTime === null) return "exercises";
+		if (murph.secondRunEndTime === null) return "second_run";
+		return "completed";
+	}, [
+		murph.startTime,
+		murph.firstRunEndTime,
+		murph.exercisesEndTime,
+		murph.secondRunEndTime,
+	]);
+
+	// Calculate final elapsed time for completed murph
+	const finalElapsedTime = useMemo(() => {
+		if (currentStage === "completed" && murph.startTime && murph.secondRunEndTime) {
+			return murph.secondRunEndTime.getTime() - murph.startTime.getTime();
+		}
+		return 0;
+	}, [currentStage, murph.startTime, murph.secondRunEndTime]);
 
 	const {
-		elapsed,
-		formatted: formattedTime,
-		isRunning: started,
+		elapsed: stopwatchElapsed,
+		formatted: stopwatchFormatted,
+		isRunning: stopwatchRunning,
 		start: startTimer,
 		reset: resetTimer,
 		stop: stopTimer,
-	} = useStopwatch();
+	} = useStopwatch(currentStage === "completed" ? null : murph.startTime);
+
+	// Use final elapsed time for completed murph, otherwise use stopwatch
+	const elapsed = currentStage === "completed" ? finalElapsedTime : stopwatchElapsed;
+	const formattedTime = currentStage === "completed" 
+		? formatTime(finalElapsedTime) 
+		: stopwatchFormatted;
+	const started = currentStage === "completed" ? false : stopwatchRunning;
 
 	const logMurph = useServerFn(addMurphServerFn);
 	const {
@@ -73,7 +166,8 @@ export function useMurph() {
 	const start = useCallback(() => {
 		startTimer();
 		setMurph((prev) => ({ ...prev, startTime: new Date() }));
-	}, [startTimer]);
+		setHasBeenSaved(false);
+	}, [startTimer, setMurph, setHasBeenSaved]);
 
 	const finishFirstRun = useCallback((distance: RunDistance) => {
 		setMurph((prev) => ({
@@ -81,7 +175,7 @@ export function useMurph() {
 			firstRunDistance: distance,
 			firstRunEndTime: new Date(),
 		}));
-	}, []);
+	}, [setMurph]);
 
 	const finishSecondRun = useCallback(
 		(distance: RunDistance) => {
@@ -92,13 +186,14 @@ export function useMurph() {
 				secondRunEndTime: new Date(),
 			}));
 		},
-		[stopTimer],
+		[stopTimer, setMurph],
 	);
 
 	const reset = useCallback(() => {
 		resetTimer();
 		setMurph(INITIAL_MURPH);
-	}, [resetTimer]);
+		setHasBeenSaved(false);
+	}, [resetTimer, setMurph, setHasBeenSaved]);
 
 	const isBefore = useCallback(
 		(minutes: number, seconds?: number) => {
@@ -114,19 +209,20 @@ export function useMurph() {
 				[exercise]: clamp(prev[exercise] + repsToAdd, 0, MAX_REPS[exercise]),
 			}));
 		},
-		[],
+		[setMurph],
 	);
 
 	const save = useCallback(async () => {
 		await mutate();
-	}, [mutate, resetTimer]);
+		setHasBeenSaved(true);
+	}, [mutate, setHasBeenSaved]);
 
 	const completeExercises = useCallback(() => {
 		setMurph((prev) => ({
 			...prev,
 			exercisesEndTime: new Date(),
 		}));
-	}, []);
+	}, [setMurph]);
 
 	const exercisesCompleted = useMemo(() => {
 		return (
@@ -135,19 +231,6 @@ export function useMurph() {
 			murph.squats >= MAX_REPS.squats
 		);
 	}, [murph.pullups, murph.pushups, murph.squats]);
-
-	const currentStage = useMemo((): MurphStage => {
-		if (murph.startTime === null) return "not_started";
-		if (murph.firstRunEndTime === null) return "first_run";
-		if (murph.exercisesEndTime === null) return "exercises";
-		if (murph.secondRunEndTime === null) return "second_run";
-		return "completed";
-	}, [
-		murph.startTime,
-		murph.firstRunEndTime,
-		murph.exercisesEndTime,
-		murph.secondRunEndTime,
-	]);
 
 	// Utility functions for stage checking
 	const compareStage = useCallback(
@@ -192,12 +275,19 @@ export function useMurph() {
 		[compareStage],
 	);
 
+	// Stop timer when murph is completed
+	useEffect(() => {
+		if (currentStage === "completed") {
+			stopTimer();
+		}
+	}, [currentStage, stopTimer]);
+
 	// Auto-save when workout is completed
 	useEffect(() => {
-		if (currentStage === "completed" && !isSaving) {
+		if (currentStage === "completed" && !isSaving && !hasBeenSaved) {
 			save();
 		}
-	}, [currentStage]);
+	}, [currentStage, isSaving, hasBeenSaved, save]);
 
 	return {
 		// State
@@ -206,7 +296,7 @@ export function useMurph() {
 		formattedTime,
 		isSaving,
 		currentStage,
-		isSaveSuccess,
+		isSaveSuccess: hasBeenSaved || isSaveSuccess,
 
 		// Actions
 		start,

@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+	CheckIcon,
 	LoaderIcon,
 	MinusIcon,
 	PlayIcon,
 	PlusIcon,
 	TimerResetIcon,
+	XIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -82,6 +84,33 @@ function RouteComponent() {
 		isAtStage,
 		isAfterStage,
 	} = useMurph();
+
+
+	// Clear localStorage when navigating away after successful save
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			// Check if Murph was completed and saved
+			if (isAtStage("completed") && isSaveSuccess) {
+				// Clear localStorage when navigating away
+				localStorage.removeItem("murph-state");
+				localStorage.removeItem("murph-saved");
+			}
+		};
+
+		// Listen for beforeunload (page refresh/close)
+		window.addEventListener("beforeunload", handleBeforeUnload);
+
+		// Cleanup function runs when component unmounts (navigation away)
+		return () => {
+			// Check if Murph was completed and saved before clearing
+			if (isAtStage("completed") && isSaveSuccess) {
+				// Clear localStorage when navigating away
+				localStorage.removeItem("murph-state");
+				localStorage.removeItem("murph-saved");
+			}
+			window.removeEventListener("beforeunload", handleBeforeUnload);
+		};
+	}, [isAtStage, isSaveSuccess]);
 
 	// Time checking functions for run distance restrictions
 	// Helper function to check if enough time has passed for a run distance
@@ -382,12 +411,12 @@ function RouteComponent() {
 					) : (
 						<>
 							{isSaveSuccess ? (
-								<Badge variant="success">Murph Saved</Badge>
+								<Badge variant="success"><CheckIcon /> Murph saved</Badge>
 							) : (
-								<Badge variant="destructive">Murph not Saved</Badge>
+								<Badge variant="destructive"><XIcon /> Failed to save murph</Badge>
 							)}
 
-							<Button variant="ghost" onClick={reset}>
+							<Button variant="outline" onClick={reset}>
 								<TimerResetIcon />
 								Reset
 							</Button>

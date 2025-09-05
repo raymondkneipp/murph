@@ -36,48 +36,6 @@
   * Personal best leaderboard
 * [ ] Badges/avatars/gear for achievements (weighted vest milestones, streaks).
 
----
-
-## 6️⃣ Optional Enhancements
-
-* [ ] **Murph leaderboard**:
-
-  * Daily/weekly/monthly top times
-  * Optional anonymized public leaderboard
-* [ ] **Workout notes**:
-
-  * Users can log tips or feelings for each Murph
-* [ ] **Export / Share feature**:
-
-  * Share workout stats to social media or as image summary
-* [ ] **Theming / Logo**:
-
-  * Implement SVG logos and app branding (we have logo pack ready)
-
----
-
-## ✅ Suggested Implementation Order
-
-1. Core workout schema + local storage + progress tracking (most important).
-2. Workout UI with start/pause/resume + visualization.
-3. User accounts/login + optional remote storage.
-4. Social features: follow/search + feed + privacy controls.
-5. Streaks, milestones, charts, and gamification.
-6. Optional enhancements (leaderboards, notes, sharing).
-7. Branding, logos, and final theming.
-
----
-
-## 📱 Core Pages / Views
-
-### 1. **Auth**
-
-* `Login / Signup`
-* `Forgot Password` (optional, but nice to have)
-* Social login? (Google/Apple) if you want lower friction
-
----
-
 ### 2. **Feed**
 
 * **Global Feed** 🌍 (all users’ Murph logs; can be disabled if traffic is huge)
@@ -118,40 +76,14 @@
   * Murph completion times over time 📈
 * Maybe achievements/badges (e.g., “10 Murphs Club”)
 
----
-
-### 7. **Settings**
-
-* Edit profile (name, username, profile pic)
-
----
-
-## 🏗 Suggested Structure (routes-ish)
-
-```
-/login
-/signup
-/feed              // global or segmented tabs (Global | Following)
-/workout/new       // start or log a Murph
-/workout/:id       // detail view of one logged workout
-/profile/me        // my private profile
-/profile/:username // public profile
-/search            // find friends
-/settings
-```
-
----
-
 ## 🌟 Optional / Nice-to-Haves
 
 * **Badges page:** achievements (streaks, PRs, volume milestones).
 
 # TODO
-- setup better id rather than auto inc
-- persist murph when refresh or exiting app
 - run murph without account
 - user public profile
-- click on murph item to view user
+    - click on murph item to view user
 - global murphs infinite query
 - search for users
 - invite users

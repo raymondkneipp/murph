@@ -5,7 +5,6 @@ import { FlameIcon, HashIcon, HourglassIcon, TimerIcon } from "lucide-react";
 import { Icon as CustomIcons } from "@/components/icon";
 import { formatNumber, murphMetrics } from "@/lib/utils";
 import { MurphItem } from "@/components/murph-item";
-import { DemoBadges } from "@/components/demo-badges";
 import { getUserMurphsServerFn, getUserServerFn } from "@/lib/api";
 
 export const Route = createFileRoute("/app/me")({
@@ -18,14 +17,14 @@ export const Route = createFileRoute("/app/me")({
 				...user,
 				name: user.name ?? "Anonymous",
 			},
-		}
+		};
 	},
 
 	loader: async ({ context }) => {
 		return {
 			murphs: await getUserMurphsServerFn(),
 			user: context.user,
-		}
+		};
 	},
 });
 
@@ -129,8 +128,6 @@ function RouteComponent() {
 					<MurphItem m={m} key={m.id} />
 				))}
 			</div>
-
-			<DemoBadges />
 		</div>
-	)
+	);
 }

@@ -36,6 +36,7 @@ import type { Murph, MurphMaybeWithUser } from "@/db/schema";
 import { deleteMurphServerFn } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import { cn, formatTimeDifference } from "@/lib/utils";
+import { Pie } from "./pie";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -97,47 +98,58 @@ export function MurphItem({
 						</CardHeader>
 					)}
 
-					<CardContent className="grid grid-cols-4 md:grid-cols-6 py-0 px-0">
-						<Stat
-							name="Run"
-							value={m.firstRunDistance + m.secondRunDistance}
-							icon={CustomIcons.Running}
-							className="border-r"
-							unit=" mi"
-						/>
-						<Stat
-							name="Pullups"
-							value={m.pullups}
-							icon={CustomIcons.Pullup}
-							className="border-r"
-						/>
-						<Stat
-							name="Pushups"
-							value={m.pushups}
-							icon={CustomIcons.Pushup}
-							className="border-r"
-						/>
-						<Stat
-							name="Squats"
-							value={m.squats}
-							icon={CustomIcons.Squat}
-							className="md:border-r"
-						/>
-						<Stat
-							className="hidden md:flex border-r"
-							name="Time"
-							value={formatTimeDifference(m.startTime, m.secondRunEndTime)}
-							icon={TimerIcon}
-						/>
-						<Stat
-							className="hidden md:flex"
-							name="Date"
-							value={format(m.startTime, "MMM dd")}
-							icon={CalendarIcon}
-						/>
+					<CardContent className="py-0 px-0 flex items-center">
+						{!showUser && (
+							<Pie
+								value={m.murphType ?? "INCOMPLETE"}
+								className="hidden md:block"
+							/>
+						)}
+
+						<div className="grid grid-cols-4 md:grid-cols-6 flex-grow">
+							<Stat
+								name="Run"
+								value={m.firstRunDistance + m.secondRunDistance}
+								icon={CustomIcons.Running}
+								className="border-r"
+								unit=" mi"
+							/>
+							<Stat
+								name="Pullups"
+								value={m.pullups}
+								icon={CustomIcons.Pullup}
+								className="border-r"
+							/>
+							<Stat
+								name="Pushups"
+								value={m.pushups}
+								icon={CustomIcons.Pushup}
+								className="border-r"
+							/>
+							<Stat
+								name="Squats"
+								value={m.squats}
+								icon={CustomIcons.Squat}
+								className="md:border-r"
+							/>
+							<Stat
+								className="hidden md:flex border-r"
+								name="Time"
+								value={formatTimeDifference(m.startTime, m.secondRunEndTime)}
+								icon={TimerIcon}
+							/>
+							<Stat
+								className="hidden md:flex"
+								name="Date"
+								value={format(m.startTime, "MMM dd")}
+								icon={CalendarIcon}
+							/>
+						</div>
 					</CardContent>
 
 					<CardFooter className="flex md:hidden items-center justify-around gap-2 px-0 flex-wrap">
+						{!showUser && <Pie value={m.murphType ?? "INCOMPLETE"} />}
+
 						<div className="flex gap-2 items-center">
 							<CalendarIcon className="size-4" />
 							<p className="font-bold text-sm">

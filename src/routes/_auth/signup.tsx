@@ -48,7 +48,7 @@ function RouteComponent() {
 			await signUp.email(
 				{ ...value, username },
 				{
-					onSuccess: () => router.navigate({ to: "/feed" }),
+					onSuccess: () => router.navigate({ to: "/app/feed" }),
 				},
 			);
 		},
