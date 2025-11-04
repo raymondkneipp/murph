@@ -1,328 +1,226 @@
-Welcome to your new TanStack app! 
+# 🏋️ Murph
 
-# Getting Started
+A modern workout tracking application for the legendary Murph CrossFit workout. Track your progress, compete on leaderboards, and connect with fellow athletes.
 
-To run this application:
+## What is Murph?
 
+The **Murph** is a CrossFit workout named after Navy Lieutenant Michael Murphy, who was killed in action in Afghanistan in 2005. It's a challenging workout that consists of:
+
+1. **1 mile run**
+2. **100 pull-ups**
+3. **200 push-ups**
+4. **300 squats**
+5. **1 mile run**
+
+All for time, and often performed with a weighted vest (20 lbs for men, 14 lbs for women).
+
+## Features
+
+### 🎯 Workout Tracking
+- **Real-time stopwatch** with precise timing
+- **Progressive rep tracking** for pull-ups, push-ups, and squats
+- **Run distance tracking** with time-based validation
+- **Auto-save to localStorage** - never lose your progress
+- **Resume capability** - pick up where you left off if interrupted
+- **Multiple workout variations** - Full, 3/4, Half, Quarter, or Incomplete Murph
+
+### 📊 Leaderboards
+- **Global leaderboard** - see how you rank against all athletes
+- **Personal best tracking** - monitor your improvement over time
+- **Workout history** - view all your past Murph attempts
+
+### 👤 User Profiles
+- **Personal profile** - view your workout history and statistics
+- **Public profiles** - check out other athletes' performances
+- **Progress visualization** - track your improvement over time
+
+### 🏆 Social Features (Coming Soon)
+- User search and discovery
+- Follow system for connecting with other athletes
+- Activity feed (global and following)
+- Comments and encouragement on workouts
+
+## Tech Stack
+
+### Frontend
+- **React 19** - Modern React with latest features
+- **TypeScript** - Type-safe development
+- **TanStack Router** - File-based routing with type safety
+- **TanStack Query** - Powerful data synchronization
+- **TanStack Start** - Full-stack React framework with SSR
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Beautiful, accessible component library
+
+### Backend
+- **Better Auth** - Modern authentication solution
+- **Drizzle ORM** - Type-safe SQL toolkit
+- **SQLite** - Lightweight, fast database
+- **TanStack Router SSR** - Server-side rendering support
+
+### Development Tools
+- **Vite** - Fast build tool and dev server
+- **Biome** - Fast linter and formatter
+- **Vitest** - Fast unit test framework
+- **T3Env** - Type-safe environment variables
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** 18+ and **pnpm** installed
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd murph
+```
+
+2. Install dependencies:
 ```bash
 pnpm install
-pnpm start
 ```
 
-# Building For Production
+3. Set up environment variables:
+   - Copy `.env.example` to `.env` (if available)
+   - Configure your database and authentication settings
 
-To build this application for production:
-
+4. Set up the database:
 ```bash
-pnpm build
+pnpm db:generate
+pnpm db:migrate
+# or
+pnpm db:push
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
+5. Start the development server:
 ```bash
-pnpm test
+pnpm dev
 ```
 
-## Styling
+The app will be available at `http://localhost:3000`
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## Available Scripts
 
-
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
-
+### Development
 ```bash
-pnpm lint
-pnpm format
-pnpm check
+pnpm dev          # Start development server on port 3000
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm serve        # Preview production build
 ```
 
+### Database
+```bash
+pnpm db:generate  # Generate database migrations
+pnpm db:migrate   # Run database migrations
+pnpm db:push      # Push schema changes to database
+```
 
-## Shadcn
+### Code Quality
+```bash
+pnpm lint         # Run linter
+pnpm format       # Format code
+pnpm check        # Run linter and formatter
+pnpm test         # Run tests
+```
 
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
+## Project Structure
+
+```
+murph/
+├── src/
+│   ├── components/      # React components
+│   │   ├── ui/          # shadcn/ui components
+│   │   └── ...          # Feature components
+│   ├── routes/          # TanStack Router file-based routes
+│   │   ├── _auth/       # Authentication routes
+│   │   ├── _marketing/  # Public marketing pages
+│   │   └── app/         # Protected app routes
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions and API
+│   ├── db/              # Database schema and setup
+│   └── integrations/    # Third-party integrations
+├── public/              # Static assets
+└── ...config files
+```
+
+## Development Guidelines
+
+### Adding Components
+
+This project uses [shadcn/ui](https://ui.shadcn.com/) for UI components. To add a new component:
 
 ```bash
 pnpx shadcn@latest add button
 ```
 
+### Adding Routes
 
-## T3Env
+TanStack Router uses file-based routing. Simply create a new file in `src/routes/` and the router will automatically pick it up.
 
-- You can use T3Env to add type safety to your environment variables.
-- Add Environment variables to the `src/env.mjs` file.
-- Use the environment variables in your code.
+Example:
+```tsx
+// src/routes/app/about.tsx
+import { createFileRoute } from "@tanstack/react-router";
 
-### Usage
+export const Route = createFileRoute("/app/about")({
+  component: AboutPage,
+});
 
-```ts
+function AboutPage() {
+  return <div>About</div>;
+}
+```
+
+### Environment Variables
+
+Environment variables are type-safe using T3Env. Add variables to `src/env/client.ts` or `src/env/server.ts` depending on where they're used.
+
+```typescript
 import { env } from "@/env";
 
 console.log(env.VITE_APP_TITLE);
 ```
 
+### State Management
 
+- **TanStack Query** - For server state and data fetching
+- **React hooks** - For local component state
+- **LocalStorage** - For workout persistence (via custom hooks)
 
+### Styling
 
+- Use **Tailwind CSS** utility classes
+- Follow the design system defined by shadcn/ui
+- Custom styles go in `src/styles.css`
 
+## Database Schema
 
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
+The app uses Drizzle ORM with SQLite. Key tables:
 
-### Adding A Route
+- **users** - User accounts and profiles
+- **murphs** - Workout records with timing data
+- **follows** - User relationships (coming soon)
 
-To add a new route to your application just add another a new file in the `./src/routes` directory.
+## Contributing
 
-TanStack will automatically generate the content of the route file for you.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+## License
 
-### Adding Links
+This project is private and proprietary.
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+## Acknowledgments
 
-```tsx
-import { Link } from "@tanstack/react-router";
-```
+- The Murph workout honors the memory of Navy Lieutenant Michael Murphy
+- Built with modern web technologies for the fitness community
 
-Then anywhere in your JSX you can use it like so:
+---
 
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-pnpm add @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+**Built with ❤️ for the CrossFit community**
